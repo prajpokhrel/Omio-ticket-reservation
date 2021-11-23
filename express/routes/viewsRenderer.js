@@ -50,21 +50,11 @@ router.get('/buses/all', async (req, res) => {
     }
 });
 
-router.get('/destinations/all', async (req, res) => {
-    try {
-        const destinations = await axios.get('/general-routes/destinations');
-        res.render('data-display/display-destinations.ejs', {destinations: destinations.data});
-    } catch (error) {
-        console.log(error.message);
-    }
-});
-
 router.get('/drivers/all', async (req, res) => {
     try {
         if (Object.entries(req.query).length !== 0) {
             const params = {
-                firstName: req.query.firstName,
-                lastName: req.query.lastName,
+                fullName: req.query.fullName,
                 email: req.query.email,
                 contactNumber: req.query.contactNumber,
                 citizenshipNumber: req.query.citizenshipNumber,
