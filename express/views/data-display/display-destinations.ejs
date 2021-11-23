@@ -106,41 +106,37 @@ License: You must have a valid license purchased only from themeforest(the above
                         <!--                            <h4 class="card-title">Advanced Search</h4>-->
                         <!--                        </div>-->
                         <div class="card-body">
-                            <form id="jquery-val-form" method="post">
+                            <form id="jquery-val-form" action="/destinations/all" method="get">
                                 <div class="row">
                                     <div class="col-md-4">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Full Name</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
+                                            <label class="form-label" for="fromSource">From: Source</label>
+                                            <input type="text" class="form-control" id="fromSource" name="fromSource" placeholder="Toronto" />
                                         </div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-email">E-mail</label>
-                                            <input type="text" id="basic-default-email" name="basic-default-email" class="form-control" placeholder="john.doe@email.com" />
+                                            <label class="form-label" for="toDestination">To: Destination</label>
+                                            <input type="text" id="toDestination" name="toDestination" class="form-control" placeholder="Calgary" />
                                         </div>
                                     </div>
+
                                     <div class="col-md-4">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Contact Number</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
+                                            <label class="form-label" for="departureDate">Departure Date</label>
+                                            <input type="date" id="departureDate" name="departureDate" class="form-control flatpickr-basic" placeholder="YYYY-MM-DD" />
                                         </div>
                                     </div>
+
                                     <div class="col-md-4">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Citizenship Number</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">License Number</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
+                                            <label class="form-label" for="fp-range">Departure Date Range</label>
+                                            <input type="text" name="departureDateRange" id="fp-range" class="form-control flatpickr-range" placeholder="YYYY-MM-DD to YYYY-MM-DD"/>
                                         </div>
                                     </div>
 
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-primary me-2" name="submit" value="Submit">Search</button>
+                                        <button type="submit" class="btn btn-primary me-2">Search</button>
                                         <button type="reset" class="btn btn-outline-secondary">Reset</button>
                                     </div>
                                 </div>

@@ -50,6 +50,27 @@ router.get('/buses/all', async (req, res) => {
     }
 });
 
+router.get('/destinations/all', async (req, res) => {
+    try {
+        if (Object.entries(req.query).length !== 0) {
+            const params = {
+                fromSource: req.query.fromSource,
+                toDestination: req.query.toDestination,
+                departureDate: req.query.departureDate,
+                departureDateRange: req.query.departureDateRange
+            };
+            const filteredDestinations = await axios.get('/destinations/search', {params});
+            // res.send(filteredDestinations.data);
+            res.render('data-display/display-destinations.ejs', {destinations: filteredDestinations.data});
+        } else  {
+            const destinations = await axios.get('/general-routes/destinations');
+            res.render('data-display/display-destinations.ejs', {destinations: destinations.data});
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
 router.get('/drivers/all', async (req, res) => {
     try {
         if (Object.entries(req.query).length !== 0) {
