@@ -38,11 +38,16 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    driverStatus: {
+      type: DataTypes.ENUM,
+      values: ['available', 'assigned', 'unavailable'],
+      allowNull: false,
+      defaultValue: 'available'
+    },
     driverImage: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     }
-
   }, {
     sequelize,
     tableName: 'drivers',

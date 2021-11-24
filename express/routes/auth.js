@@ -67,13 +67,13 @@ router.post('/register', async (req, res) => {
 
 router.post('/requestResetPassword', async (req, res) => {
     const { forgotPasswordEmail } = req.body;
-    console.log(forgotPasswordEmail);
+
     const user = await Admin.findOne({
         where: {
             email: forgotPasswordEmail
         }
     });
-    if (!user) throw new Error("Email does not exists");
+    if (!user) throw new Error("Email does not exists.");
     let token = await ResetToken.findOne({
         where: {
             userId: user.id

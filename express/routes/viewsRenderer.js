@@ -26,7 +26,16 @@ router.get('/create-destination', async (req, res) => {
         const buses = await axios.get('/buses');
         res.render('data-create/create-destination.ejs', {buses: buses.data});
     } catch (error) {
+        console.log(error);
+    }
+});
 
+router.get('/create-bus-map', async (req, res) => {
+    try {
+        const buses = await axios.get('/buses');
+        res.render('data-create/create-seats.ejs', {buses: buses.data});
+    } catch (error) {
+        console.log(error);
     }
 });
 

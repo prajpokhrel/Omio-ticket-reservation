@@ -42,7 +42,6 @@ router.get('/:id', async (req, res) => {
         const id = req.params.id;
         const bus = await Bus.findOne({
             where: {id: id},
-            // OMG: Bus with all its destinations and driver details. HAIT so powerful.
             include: ["destinations", "driverDetails"],
         });
         res.send(bus);

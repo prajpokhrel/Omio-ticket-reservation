@@ -50,7 +50,9 @@ License: You must have a valid license purchased only from themeforest(the above
 
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/omio-custom-css.css">
     <!-- END: Custom CSS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 </head>
 <!-- END: Head-->
@@ -109,42 +111,67 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <h4 class="card-title"><span class="text-success">Customize seats and add extra fare based on seat type</span></h4>
                             </div>
                             <div class="card-body">
-                                <form id="jquery-val-form" method="post">
+                                <form id="jquery-val-form">
                                     <div class="row">
                                         <div class="col-12">
                                             <div class="mb-1">
-                                                <label class="form-label" for="select-country">Select a Bus <span class="text-warning">*seats will be configured to this particular bus</span></label>
-                                                <select class="form-select select2" id="select-country" name="select-country">
-                                                    <option value="">Select Country</option>
-                                                    <option value="usa">USA</option>
-                                                    <option value="uk">UK</option>
-                                                    <option value="france">France</option>
-                                                    <option value="australia">Australia</option>
-                                                    <option value="spain">Spain</option>
+                                                <label class="form-label" for="select-bus">Select a Bus <span class="text-warning">*seats will be configured to this particular bus</span></label>
+                                                <select class="form-select select2" id="select-bus" name="selectedBus">
+                                                    <option value="">Select Available Bus</option>
+                                                    <% if (buses) { %>
+                                                        <% buses.map((bus) => { %>
+                                                            <option value="<%= bus.id %>"><%= bus.busServiceName %>&nbsp;&nbsp;&nbsp;<%= bus.busNumber %></option>
+                                                        <% }); %>
+                                                    <% } %>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="mb-1">
-                                                <label class="form-label" for="basic-default-name">Socially distanced seat <span class="text-warning">+extra US$ to the total fare</span></label>
-                                                <input type="number" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe"/>
+                                                <label class="form-label" for="sd-seat">Socially distanced seat <span class="text-warning">+extra US$ to the total fare</span></label>
+                                                <input type="number" class="form-control" id="sd-seat" name="distancedSeatCharge" placeholder="5"/>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-12">
                                             <div class="mb-1">
-                                                <label class="form-label" for="basic-default-name">Reserved seat <span class="text-warning">+extra US$ to the total fare</span></label>
-                                                <input type="number" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe"/>
+                                                <label class="form-label" for="r-seat">Reserved seat <span class="text-warning">+extra US$ to the total fare</span></label>
+                                                <input type="number" class="form-control" id="r-seat" name="reserveSeatCharge" placeholder="3"/>
                                             </div>
                                         </div>
 
                                         <div class="col-12">
-                                            <h1>ADD A SEAT PLAN HERE AND LET ADMIN CREATE IT.</h1>
-                                            <h3>Its a little bit hard</h3>
+                                            <div class="row">
+                                                <div class="col-12 col-md-8">
+                                                    <h3>Create a seat map</h3>
+                                                    <div class="col-12">
+                                                        <div class="mb-1">
+                                                            <label class="form-label" for="seats">Select a Bus <span class="text-warning">*seats will be configured to this particular bus</span></label>
+                                                            <select class="form-select select2" id="seats" name="seatType">
+                                                                <option value="">Select Seat Type</option>
+                                                                <option value="isSociallyDistancedSeat">Socially Distanced Seat</option>
+                                                                <option value="isReservedSeat">Reserved Seat</option>
+                                                                <option value="isGeneralSeat">General Seat</option>
+                                                                <option value="isBlockedSeat">Blocked Seat</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-12 text-center"><h6>Driver Side - Front</h6></div>
+
+                                                    <!-- Actual Seats Here -->
+                                                    <div class="bus-map" id="busMap">
+
+                                                    </div>
+
+                                                </div>
+                                                <div class="col-12 col-md-4">
+                                                    <h3>Seats label</h3>
+                                                </div>
+                                            </div>
                                         </div>
 
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary me-2" name="submit" value="Submit">Submit</button>
-                                            <button type="reset" class="btn btn-outline-secondary">Reset</button>
+                                            <button id="seatsAddButton" type="submit" class="btn btn-primary me-2">Submit</button>
                                         </div>
                                     </div>
                                 </form>
@@ -168,6 +195,10 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- BEGIN: Vendor JS-->
 <script src="/app-assets/vendors/js/vendors.min.js"></script>
 <!-- BEGIN Vendor JS-->
+
+<!-- BEGIN: Omio custom JS -->
+<script src="/omio-custom-assets/bus-seats.js"></script>
+<!-- END: Omio custom JS -->
 
 <!-- BEGIN: Page Vendor JS-->
 <script src="/app-assets/vendors/js/forms/select/select2.full.min.js"></script>

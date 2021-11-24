@@ -22,7 +22,7 @@ module.exports = (sequelize) => {
     },
     tokenExpires: {
       type: DataTypes.DATE,
-      defaultValue: Date.now() + 3600
+      defaultValue: new Date(Date.now() + 3600000)
     }
   }, {
     sequelize,

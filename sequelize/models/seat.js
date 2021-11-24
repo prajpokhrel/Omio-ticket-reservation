@@ -7,9 +7,10 @@ module.exports = (sequelize) => {
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        static associate({Bus}) {
+        static associate({Bus, Destination}) {
             // define association here
             this.belongsTo(Bus, {foreignKey: "seatOfBus"});
+            this.belongsTo(Destination, {foreignKey: "seatOfDestination"});
         }
     }
     Seat.init({
@@ -17,20 +18,20 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false
         },
-        seatSpecificPrice: {
-            type: DataTypes.VIRTUAL,
-            get() {
-                // add condition later
-            },
-            set(value) {
-                throw new Error('Seat specific price is auto calculated based on seat type.');
-            }
-        },
-        seatRow: {
+        // seatSpecificPrice: {
+        //     type: DataTypes.VIRTUAL,
+        //     get() {
+        //         // add condition later
+        //     },
+        //     set(value) {
+        //         throw new Error('Seat specific price is auto calculated based on seat type.');
+        //     }
+        // },
+        row: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
-        seatCol: {
+        col: {
             type: DataTypes.INTEGER,
             allowNull: false
         },

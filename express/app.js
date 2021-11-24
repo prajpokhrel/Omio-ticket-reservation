@@ -14,6 +14,7 @@ const placesRoutes = require('./routes/places');
 const busesRoutes = require('./routes/buses');
 const driversRoutes = require('./routes/drivers');
 const destinationsRoutes = require('./routes/destinations');
+const seatsRoutes = require('./routes/seats');
 
 const {sequelize, User} = require('../sequelize/models'); // it directly calls index.js
 const cookieParser = require('cookie-parser');
@@ -64,6 +65,7 @@ app.use('/api/places', placesRoutes);
 app.use('/api/buses', busesRoutes);
 app.use('/api/drivers', driversRoutes);
 app.use('/api/destinations', destinationsRoutes);
+app.use('/api/seats', seatsRoutes);
 
 
 

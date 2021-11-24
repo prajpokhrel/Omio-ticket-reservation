@@ -21,9 +21,10 @@ module.exports = (sequelize) => {
         },
         // enum: paid, not paid, cancelled/refunded
         paymentStatus: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.ENUM,
+            values: ['paid', 'refunded'],
             allowNull: false,
-            defaultValue: false
+            defaultValue: 'paid'
         },
         bookingTime: {
             type: DataTypes.DATE,
@@ -32,10 +33,12 @@ module.exports = (sequelize) => {
         },
         // enum: booked, cancelled
         // validate, it can only be cancelled 3 4 hours before departure
+        // set seats to isBooked false if status is cancelled
         reservationStatus: {
-            type: DataTypes.BOOLEAN,
+            type: DataTypes.ENUM,
+            values: ['active', 'cancelled'],
             allowNull: false,
-            defaultValue: false
+            defaultValue: 'active'
         },
         totalPassenger: {
             type: DataTypes.INTEGER,

@@ -111,7 +111,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <form id="jquery-val-form" method="POST" action="/api/general-routes/destinations">
                                     <div class="row">
 
-                                        <div class="col-12">
+                                        <div class="col-md-6 col-12">
                                             <div class="mb-1">
                                                 <label class="form-label" for="assignedBus">
                                                     Assign a bus to this route
@@ -132,6 +132,13 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                         <div class="col-md-6 col-12">
                                             <div class="mb-1">
+                                                <label class="form-label" for="destinationRouteFare">Route Fare (in US$)</label>
+                                                <input type="number" class="form-control" id="destinationRouteFare" name="routeFare" placeholder="33.25" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="mb-1">
                                                 <label class="form-label" for="fromSourcePlace">From: Source (Place)</label>
                                                 <select class="form-select select2" id="fromSourcePlace" name="fromSource">
                                                     <option value="">Select Source</option>
@@ -145,29 +152,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <select class="form-select select2" id="toDestinationPlace" name="toDestination">
                                                     <option value="">Select Destination</option>
                                                 </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 col-12">
-                                            <div class="mb-1">
-                                                <label class="form-label" for="midPointPlace">
-                                                    Midpoint: (Any available place between source and destination)
-                                                </label>
-                                                <select class="form-select select2" id="midPointPlace" name="midPlaceBetweenRoutes">
-                                                    <option value="">Select Country</option>
-                                                    <option value="usa">USA</option>
-                                                    <option value="uk">UK</option>
-                                                    <option value="france">France</option>
-                                                    <option value="australia">Australia</option>
-                                                    <option value="spain">Spain</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 col-12">
-                                            <div class="mb-1">
-                                                <label class="form-label" for="destinationRouteFare">Route Fare (in US$)</label>
-                                                <input type="number" class="form-control" id="destinationRouteFare" name="routeFare" placeholder="33.25" />
                                             </div>
                                         </div>
 

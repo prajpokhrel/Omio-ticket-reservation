@@ -7,11 +7,12 @@ module.exports = (sequelize) => {
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        static associate({Bus, Passenger, Reservation}) {
+        static associate({Bus, Passenger, Reservation, Seat}) {
             // define association here
             this.belongsTo(Bus, {foreignKey: "assignedBusId", as: "buses"});
             this.hasMany(Passenger, {foreignKey: "forDestination", as: "passengers"});
             this.hasMany(Reservation, {foreignKey: "forDestination", as: "reservations"});
+            this.hasMany(Seat, {foreignKey: "seatOfDestination", as: "seats"});
         }
     }
     Destination.init({
@@ -22,10 +23,6 @@ module.exports = (sequelize) => {
         toDestination: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        midPlaceBetweenRoutes: {
-            type: DataTypes.STRING,
-            allowNull: true
         },
         routeFare: {
             type: DataTypes.DECIMAL(10, 2),
@@ -48,7 +45,6 @@ module.exports = (sequelize) => {
         },
         departureTime: {
             type: DataTypes.TIME,
-            // type: DataTypes.STRING, // if TIME data type does not exits
             allowNull: false
         },
         arrivalDate: {
@@ -60,7 +56,6 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         assignedBusId: {
-            // this is a foreign key, will be assigned above
             type: DataTypes.INTEGER,
             allowNull: false
         }
