@@ -179,7 +179,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                             <td><%= driver.contactNumber %></td>
                                             <td><%= driver.citizenshipNumber %></td>
                                             <td><%= driver.licenseNumber %></td>
-                                            <td><span class="badge rounded-pill badge-light-primary me-1">Active</span></td>
+                                            <td>
+                                                <span class="badge rounded-pill <%= driver.driverStatus === 'available' ? 'badge-light-success' : driver.driverStatus === 'assigned' ? 'badge-light-primary' : driver.driverStatus === 'unavailable' ? 'badge-light-danger' : '' %> me-1">
+                                                    <%= driver.driverStatus %>
+                                                </span>
+                                            </td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">

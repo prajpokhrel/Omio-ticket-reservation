@@ -12,6 +12,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/ready-for-route', async (req, res) => {
+    try {
+        const availableBuses = await Bus.findAll({
+            where: {
+                busStatus: {
+                    [Op.or]: ['available', 'en route']
+                }
+            }
+        });
+        res.send(availableBuses);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get('/search', async (req, res) => {
     // const { busServiceName, busNumber } = req.query;
     const busServiceName = req.query.busServiceName.toLowerCase();
@@ -37,6 +52,7 @@ router.get('/search', async (req, res) => {
     }
 });
 
+// this can go to buses controllers findSingleDataById
 router.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;

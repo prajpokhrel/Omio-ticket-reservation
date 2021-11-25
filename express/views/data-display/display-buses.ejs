@@ -158,7 +158,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                             <td><%= bus.busNumber %></td>
                                             <td><%= bus.seatCapacity %></td>
                                             <td><%= bus.assignedRoutesCount %></td>
-                                            <td><span class="badge rounded-pill badge-light-primary me-1">Active</span></td>
+                                            <td>
+                                                <span class="badge rounded-pill <%= bus.busStatus === 'available' ? 'badge-light-success' : bus.busStatus === 'en route' ? 'badge-light-warning' : bus.busStatus === 'unavailable' ? 'badge-light-danger' : '' %> me-1">
+                                                    <%= bus.busStatus %>
+                                                </span>
+                                            </td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">

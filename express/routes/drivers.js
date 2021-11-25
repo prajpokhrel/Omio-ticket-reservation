@@ -5,7 +5,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const drivers = await Driver.findAll();
+        const drivers = await Driver.findAll({
+            where: {
+                driverStatus: 'available'
+            }
+        });
         res.send(drivers);
     } catch (error) {
         console.log(error.message);
@@ -42,11 +46,31 @@ router.get('/search', async (req, res) => {
                         [Op.substring]: licenseNumber
                     }),
                 ]
-            }
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
         });
         res.json(filteredDrivers);
     } catch (error) {
         console.log(error.message);
+    }
+});
+
+router.get('/:driverId', async (req, res) => {
+    const driverId = req.params.driverId;
+    try {
+        const drivers = await Driver.findAll({
+            where: {
+                [Op.or]: {
+                    driverStatus: 'available',
+                    id: driverId
+                }
+            }
+        });
+        res.send(drivers);
+    } catch (error) {
+        console.log(error);
     }
 });
 

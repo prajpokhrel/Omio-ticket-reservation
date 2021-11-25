@@ -1,6 +1,5 @@
 const { getIdParam } = require('../utils/helperMethods');
 const { Destination } = require('../../sequelize/models');
-// expand these to services....
 
 const createSingleData = async (req, res) => {
     const {

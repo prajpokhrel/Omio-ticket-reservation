@@ -1,18 +1,18 @@
 'use strict';
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes} = require('sequelize');
 module.exports = (sequelize) => {
-    class Seat extends Model {
+    class RouteSpecificSeat extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        static associate({Bus}) {
+        static associate({Destination}) {
             // define association here
-            this.belongsTo(Bus, {foreignKey: "seatOfBus"});
+            this.belongsTo(Destination, {foreignKey: "seatOfDestination"});
         }
     }
-    Seat.init({
+    RouteSpecificSeat.init({
         seatNumber: {
             type: DataTypes.STRING,
             allowNull: false
@@ -78,11 +78,15 @@ module.exports = (sequelize) => {
             // seat of a bus as a foreign key
             type: DataTypes.INTEGER,
             allowNull: false,
+        },
+        seatOfDestination: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         }
     }, {
         sequelize,
-        tableName: 'seats',
-        modelName: 'Seat',
+        tableName: 'routeSpecificSeats',
+        modelName: 'RouteSpecificSeat',
     });
-    return Seat;
+    return RouteSpecificSeat;
 };

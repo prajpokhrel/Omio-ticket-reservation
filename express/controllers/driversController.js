@@ -3,7 +3,6 @@ const { Driver } = require('../../sequelize/models');
 // expand these to services....
 
 const createSingleData = async (req, res) => {
-    console.log(req.body);
     const {
         firstName,
         lastName,
@@ -29,7 +28,11 @@ const createSingleData = async (req, res) => {
 
 const findAllData = async (req, res) => {
     try {
-        const drivers = await Driver.findAll();
+        const drivers = await Driver.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
         res.send(drivers);
     } catch (error) {
         console.log(error.message);
@@ -58,12 +61,13 @@ const updateSingleData = async (req, res) => {
         contactNumber,
         citizenshipNumber,
         licenseNumber,
-        driverImage
+        driverImage,
+        driverStatus
     } = req.body;
     const id = req.params.id;
 
     try {
-        const updatedDriver = await Driver.update({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage},
+        const updatedDriver = await Driver.update({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverStatus, driverImage},
             {
                 where: {id: id}
             });

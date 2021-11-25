@@ -1,5 +1,5 @@
 'use strict';
-const {DataTypes} = require("sequelize");
+
 module.exports = {
     up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable('buses', {
@@ -26,18 +26,17 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
-            // validate to avoid bus having more than 2 routes, when creating destinations
             assignedRoutesCount: {
                 type: DataTypes.INTEGER,
                 allowNull: false,
                 defaultValue: 0
             },
-            // this will be enum
             busStatus: {
-                type: DataTypes.BOOLEAN,
+                type: DataTypes.ENUM,
+                values: ['available', 'en route' ,'unavailable'],
                 allowNull: false,
+                defaultValue: 'available'
             },
-            // foreign key
             driverId: {
                 type: DataTypes.INTEGER,
                 allowNull: true,

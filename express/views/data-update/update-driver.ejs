@@ -136,10 +136,24 @@ License: You must have a valid license purchased only from themeforest(the above
                                             </div>
                                         </div>
 
-                                        <div class="col-12">
+                                        <div class="col-md-6 col-12">
                                             <div class="mb-1">
                                                 <label for="driverImage" class="form-label">Driver Image</label>
                                                 <input value="<%= locals.driver.driverImage %>" class="form-control" accept="image/*" type="file" id="driverImage" name="driverImage" />
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-12">
+                                            <div class="mb-1">
+                                                <label class="form-label" for="driverStatus">
+                                                    Driver Status
+                                                </label>
+                                                <select class="form-select select2" id="driverStatus" name="driverStatus">
+                                                    <option value="">Select Driver Status</option>
+                                                    <option value="available" <%= locals.driver.driverStatus === 'available' ? 'selected' : ''%> >available</option>
+                                                    <option value="assigned" <%= locals.driver.driverStatus === 'assigned' ? 'selected' : ''%> >assigned</option>
+                                                    <option value="unavailable" <%= locals.driver.driverStatus === 'unavailable' ? 'selected' : ''%> >unavailable</option>
+                                                </select>
                                             </div>
                                         </div>
 

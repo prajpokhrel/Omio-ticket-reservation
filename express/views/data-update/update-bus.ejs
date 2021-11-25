@@ -151,9 +151,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 </label>
                                                 <select class="form-select select2" id="busStatus" name="busStatus">
                                                     <option value="">Select Bus Status</option>
-                                                    <option <%= locals.bus.busStatus === '1' ? 'selected' : '' %> value="1">Available</option>
-                                                    <option <%= locals.bus.busStatus === 'En Route' ? 'selected' : '' %> value="En Route">En Route</option>
-                                                    <option <%= locals.bus.busStatus === 'Not Available' ? 'selected' : '' %> value="Not Available">Not Available</option>
+                                                    <option <%= locals.bus.busStatus === 'available' ? 'selected' : '' %> value="1">available</option>
+                                                    <option <%= locals.bus.busStatus === 'en route' ? 'selected' : '' %> value="En Route">en route</option>
+                                                    <option <%= locals.bus.busStatus === 'unavailable' ? 'selected' : '' %> value="Not Available">unavailable</option>
                                                 </select>
                                             </div>
                                         </div>

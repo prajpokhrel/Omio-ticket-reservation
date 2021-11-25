@@ -3,6 +3,37 @@ const { Destination } = require('../../sequelize/models');
 const {Op, Sequelize} = require("sequelize");
 const router = express.Router();
 
+router.get('/find-routes/:fromSource/:toDestination/:travelers/:departureDate', async (req, res) => {
+    const fromSource = req.params.fromSource.toLowerCase();
+    const toDestination = req.params.toDestination.toLowerCase();
+    const travelers = req.params.travelers;
+    const departureDate = new Date(req.params.departureDate);
+
+    try {
+        const foundRoutes = await Destination.findAll({
+            where: {
+                [Op.and]: [
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('fromSource')), {
+                        [Op.substring]: fromSource
+                    }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('toDestination')), {
+                        [Op.substring]: toDestination
+                    }),
+                    {
+                        departureDate: {
+                            [Op.eq]: departureDate
+                        }
+                    },
+                ]
+            }
+        });
+        res.json(foundRoutes);
+    } catch (error) {
+        console.log(error);
+    }
+    res.json({fromSource, toDestination, travelers, departureDate});
+});
+
 router.get('/search', async (req, res) => {
     const fromSource = req.query.fromSource.toLowerCase();
     const toDestination = req.query.toDestination.toLowerCase();

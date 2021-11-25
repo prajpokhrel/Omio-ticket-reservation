@@ -14,11 +14,17 @@ const createSingleData = async (req, res) => {
     } = req.body;
 
     // multer will handle form image this
+    // this is a transaction, handle wisely, works for now
     try {
         if (req.body.id) {
             res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
         } else {
             const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, seatCapacity, busStatus, driverId});
+            const updateDriverStatus = await Driver.update({driverStatus: 'assigned'}, {
+                where: {
+                    id: bus.driverId
+                }
+            });
             res.redirect('/create-bus');
             // res.status(201).send(bus);
             // res.status(201).end();
@@ -31,7 +37,11 @@ const createSingleData = async (req, res) => {
 
 const findAllData = async (req, res) => {
     try {
-        const buses = await Bus.findAll();
+        const buses = await Bus.findAll({
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        });
         // const buses = await Bus.findAll({include: ['driverDetails']});
         res.status(200).send(buses);
     } catch (error) {
