@@ -1,5 +1,12 @@
 const { getIdParam } = require('../utils/helperMethods');
-const { Destination } = require('../../sequelize/models');
+const { Destination, RouteSpecificSeat, Seat } = require('../../sequelize/models');
+
+const updateSeatConfiguration = (seats, busId, destinationId) => {
+    return seats.map((seat) => {
+        console.log(seat);
+        return {...seat, seatOfBus: busId, seatOfDestination: destinationId}
+    });
+};
 
 const createSingleData = async (req, res) => {
     const {
@@ -14,8 +21,20 @@ const createSingleData = async (req, res) => {
         assignedBusId
     } = req.body;
 
+    // this is a transaction
     try {
         const destination = await Destination.create({fromSource, toDestination, midPlaceBetweenRoutes, routeFare, departureDate, departureTime, arrivalDate, estimatedArrivalTime, assignedBusId});
+        const seatsOfAssignedBus = await Seat.findAll({
+            where: {
+                seatOfBus: destination.assignedBusId
+            },
+            raw: true
+        });
+        // console.log(seatsOfAssignedBus);
+        const configuredSeats = updateSeatConfiguration(seatsOfAssignedBus, destination.assignedBusId, destination.id);
+        // res.send({config: configuredSeats});
+        await RouteSpecificSeat.bulkCreate(configuredSeats);
+
         res.redirect('/create-destination');
         // res.status(201).send(destination);
     } catch (error) {

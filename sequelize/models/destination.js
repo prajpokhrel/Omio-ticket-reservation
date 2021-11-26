@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
             this.belongsTo(Bus, {foreignKey: "assignedBusId", as: "buses"});
             this.hasMany(Passenger, {foreignKey: "forDestination", as: "passengers"});
             this.hasMany(Reservation, {foreignKey: "forDestination", as: "reservations"});
-            this.hasMany(RouteSpecificSeat, {foreignKey: "seatOfDestination", as: "seats"});
+            this.hasMany(RouteSpecificSeat, {foreignKey: "seatOfDestination", as: "routeSeats"});
         }
     }
     Destination.init({

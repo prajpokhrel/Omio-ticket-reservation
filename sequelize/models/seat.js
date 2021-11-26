@@ -16,7 +16,7 @@ module.exports = (sequelize) => {
         seatSpecificPrice: {
             type: DataTypes.VIRTUAL,
             get() {
-                return this.sociallyDistancedSeatFare ? this.isSociallyDistancedSeat === true : this.reservedSeatFare;
+                return this.isSociallyDistancedSeat ? this.sociallyDistancedSeatFare : this.isReservedSeat ? this.reservedSeatFare : '';
             },
             set(value) {
                 throw new Error('Seat specific price is auto calculated based on seat type.');

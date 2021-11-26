@@ -111,6 +111,15 @@ router.get('/change-password', (req, res) => {
     res.render('users/change-password.ejs');
 });
 
+router.get('/seats/all', async (req, res) => {
+    try {
+        const buses = await axios.get('/buses');
+        res.render('data-display/display-seats', {buses: buses.data});
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get('/bus/edit/:id', async (req, res) => {
     const busId = req.params.id;
     try {
