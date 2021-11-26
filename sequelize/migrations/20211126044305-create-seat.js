@@ -9,10 +9,6 @@ module.exports = {
                 primaryKey: true,
                 type: DataTypes.INTEGER
             },
-            seatNumber: {
-                type: DataTypes.STRING,
-                allowNull: false
-            },
             row: {
                 type: DataTypes.INTEGER,
                 allowNull: false

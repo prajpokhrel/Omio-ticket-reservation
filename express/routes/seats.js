@@ -27,14 +27,30 @@ const combineSeatMap = (seatData) => {
 
 router.post('/create-bus-map', async (req, res) => {
     const seatData = reduceSeatMap(req.body);
-    // try {
-    //     const seats = await Seat.bulkCreate(seatData);
-    //     res.json({seatData: seats});
-    // } catch (error) {
-    //     console.log(error);
-    // }
+    try {
+        const seats = await Seat.bulkCreate(seatData);
+        res.json({seatData: seats});
+    } catch (error) {
+        console.log(error);
+    }
     const combinedSeatData = combineSeatMap(seatData);
-    res.json({seatData: combinedSeatData});
+    res.redirect('/create-bus-map');
+    // res.json({seatData: combinedSeatData});
+});
+
+router.get('/bus-map/:busId', async (req, res) => {
+    const busId = req.params.busId;
+    try {
+        const seats = await Seat.findAll({
+             where: {
+                 seatOfBus: busId
+             }
+        });
+        const combinedSeatData = combineSeatMap(seats);
+        res.json({seatData: combinedSeatData});
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 

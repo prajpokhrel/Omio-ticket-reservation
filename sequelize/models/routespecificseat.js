@@ -13,10 +13,6 @@ module.exports = (sequelize) => {
         }
     }
     RouteSpecificSeat.init({
-        seatNumber: {
-            type: DataTypes.STRING,
-            allowNull: false
-        },
         seatSpecificPrice: {
             type: DataTypes.VIRTUAL,
             get() {
