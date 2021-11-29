@@ -15,6 +15,8 @@ const busesRoutes = require('./routes/buses');
 const driversRoutes = require('./routes/drivers');
 const destinationsRoutes = require('./routes/destinations');
 const seatsRoutes = require('./routes/seats');
+const usersRoutes = require('./routes/users');
+const reservationsRoute = require('./routes/reservations');
 
 const {sequelize, User} = require('../sequelize/models'); // it directly calls index.js
 const cookieParser = require('cookie-parser');
@@ -32,7 +34,7 @@ initializePassport(passport);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors()); // Modify later for react
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 
 // sessions and flash
 
@@ -66,6 +68,8 @@ app.use('/api/buses', busesRoutes);
 app.use('/api/drivers', driversRoutes);
 app.use('/api/destinations', destinationsRoutes);
 app.use('/api/seats', seatsRoutes);
+app.use('/api/users', usersRoutes);
+app.use('/api/reservations', reservationsRoute);
 
 
 

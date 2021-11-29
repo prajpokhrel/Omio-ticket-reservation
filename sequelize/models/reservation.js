@@ -15,8 +15,9 @@ module.exports = (sequelize) => {
     }
     Reservation.init({
         //fromSource, toDestination, date, time, onBus will come from destination table
+        // this will be decimal
         totalTravelAmount: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL,
             allowNull: false
         },
         // enum: paid, not paid, cancelled/refunded

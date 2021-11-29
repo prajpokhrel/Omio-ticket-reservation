@@ -1,5 +1,6 @@
 'use strict';
 const { Model, DataTypes } = require('sequelize');
+const jwt = require('jsonwebtoken');
 module.exports = (sequelize) => {
   class User extends Model {
     /**
@@ -11,6 +12,12 @@ module.exports = (sequelize) => {
       // define association here
       this.hasMany(Passenger, { foreignKey: 'mainAccountId', as: 'passengers' });
       this.hasMany(Reservation, { foreignKey: 'mainAccountId', as: 'reservations' });
+    }
+
+    generateAuthToken() {
+        return jwt.sign({id: this.id}, process.env.JWT_CLIENT_PRIVATE_KEY, {
+          expiresIn: 3 * 24 * 60 * 60
+        });
     }
   }
 

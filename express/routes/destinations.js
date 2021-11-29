@@ -46,7 +46,7 @@ router.get('/search', async (req, res) => {
 /*
 * First API: /find-routes/:fromSource/:toDestination/:travelers/:departureDate
 * Second API: /reserve-seats/:destinationUUID/:destinationID - gets destination details, bus details, seats details
-* Third API: /passengers-reservatioin/:destinatoinUUID/:destinationID/:price details/
+* Third API: /passengers-reservation/:destinationUUID/:destinationID/:price details/
 * */
 router.get('/find-routes/:fromSource/:toDestination/:travelers/:departureDate', async (req, res) => {
     const fromSource = req.params.fromSource.toLowerCase();
@@ -101,14 +101,32 @@ router.get('/journey-details/:journeyId', async (req, res) => {
         const journeySpecificSeats = await RouteSpecificSeat.findAll({
             where: {
                 seatOfDestination: journeyId
-            }
+            },
+            order: [
+                ['id', 'ASC']
+            ]
         });
         const combinedSeatData = combineSeatMap(journeySpecificSeats);
         res.json({journeyDetails: journeyDetails, specificJourneySeats: combinedSeatData});
     } catch (error) {
         console.log(error);
     }
-})
+});
+
+router.get('/journey-details/with-bus/:journeyId', async (req, res) => {
+    const journeyId = req.params.journeyId;
+    try {
+        const journeyDetails = await Destination.findOne({
+            where: {
+                id: journeyId
+            },
+            include: ["buses"]
+        });
+        res.send(journeyDetails);
+    } catch (error) {
+        console.log(error);
+    }
+});
 
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
