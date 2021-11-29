@@ -51,6 +51,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <!-- BEGIN: Custom CSS-->
     <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
     <!-- END: Custom CSS-->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 </head>
 <!-- END: Head-->
@@ -97,68 +98,6 @@ License: You must have a valid license purchased only from themeforest(the above
             </div>
         </div>
         <div class="content-body">
-            <div class="row">
-                <div class="col-lg-3 col-sm-6">
-                    <div class="card">
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <div>
-                                <h3 class="fw-bolder mb-75">21,459</h3>
-                                <span>Total Users</span>
-                            </div>
-                            <div class="avatar bg-light-primary p-50">
-            <span class="avatar-content">
-              <i data-feather="user" class="font-medium-4"></i>
-            </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="card">
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <div>
-                                <h3 class="fw-bolder mb-75">4,567</h3>
-                                <span>Paid Users</span>
-                            </div>
-                            <div class="avatar bg-light-danger p-50">
-            <span class="avatar-content">
-              <i data-feather="user-plus" class="font-medium-4"></i>
-            </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="card">
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <div>
-                                <h3 class="fw-bolder mb-75">19,860</h3>
-                                <span>Active Users</span>
-                            </div>
-                            <div class="avatar bg-light-success p-50">
-            <span class="avatar-content">
-              <i data-feather="user-check" class="font-medium-4"></i>
-            </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="card">
-                        <div class="card-body d-flex align-items-center justify-content-between">
-                            <div>
-                                <h3 class="fw-bolder mb-75">237</h3>
-                                <span>Pending Users</span>
-                            </div>
-                            <div class="avatar bg-light-warning p-50">
-            <span class="avatar-content">
-              <i data-feather="user-x" class="font-medium-4"></i>
-            </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- Striped rows start -->
             <div class="row" id="table-striped">
                 <div class="col-12">
@@ -167,55 +106,23 @@ License: You must have a valid license purchased only from themeforest(the above
                         <!--                            <h4 class="card-title">Advanced Search</h4>-->
                         <!--                        </div>-->
                         <div class="card-body">
-                            <form id="jquery-val-form" method="post">
+                            <form id="jquery-val-form" action="/passengers/all" method="get">
                                 <div class="row">
-
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Full Name</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
+                                            <label class="form-label" for="basic-default-name">Passenger Name</label>
+                                            <input type="text" class="form-control" id="basic-default-name" name="fullName" placeholder="John Doe" />
                                         </div>
                                     </div>
-
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Phone Number</label>
-                                            <input type="number" class="form-control" step=".01" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Email</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">ID Number</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="select-country-s">
-                                                Search by country
-                                            </label>
-                                            <select class="form-select select2" id="select-midpoint-s" name="search-country-s">
-                                                <option value="">Select Country</option>
-                                                <option value="usa">USA</option>
-                                                <option value="uk">UK</option>
-                                                <option value="france">France</option>
-                                                <option value="australia">Australia</option>
-                                                <option value="spain">Spain</option>
-                                            </select>
+                                            <label class="form-label" for="basic-default-email">Passenger E-mail</label>
+                                            <input type="email" id="basic-default-email" name="email" class="form-control" placeholder="john.doe@email.com" />
                                         </div>
                                     </div>
 
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-primary me-2" name="submit" value="Submit">Search</button>
+                                        <button type="submit" class="btn btn-primary me-2">Search</button>
                                         <button type="reset" class="btn btn-outline-secondary">Reset</button>
                                     </div>
                                 </div>
@@ -225,134 +132,44 @@ License: You must have a valid license purchased only from themeforest(the above
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
-                                    <th>Email</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
+                                    <th>Full Name</th>
+                                    <th>E-mail</th>
                                     <th>Phone Number</th>
-                                    <th>ID Type</th>
-                                    <th>ID Number</th>
+                                    <th>Id Type</th>
+                                    <th>Id Number</th>
                                     <th>Country</th>
-                                    <th>Status</th>
+                                    <th>Was Main Passenger?</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>prajwal.pokhrel@gmail.com</td>
-                                    <td>
-                                        <span class="fw-bold">Angular Project</span>
-                                    </td>
-                                    <td>Peter Charls</td>
-                                    <td>9843194810</td>
-                                    <td>Citizenship</td>
-                                    <td>38017-2562</td>
-                                    <td>Country</td>
-                                    <td><span class="badge rounded-pill badge-light-primary me-1">Active</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>prajwal.pokhrel@gmail.com</td>
-                                    <td>
-                                        <span class="fw-bold">Angular Project</span>
-                                    </td>
-                                    <td>Peter Charls</td>
-                                    <td>9843194810</td>
-                                    <td>Citizenship</td>
-                                    <td>38017-2562</td>
-                                    <td>Country</td>
-                                    <td><span class="badge rounded-pill badge-light-success me-1">Completed</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>prajwal.pokhrel@gmail.com</td>
-                                    <td>
-                                        <span class="fw-bold">Angular Project</span>
-                                    </td>
-                                    <td>Peter Charls</td>
-                                    <td>9843194810</td>
-                                    <td>Citizenship</td>
-                                    <td>38017-2562</td>
-                                    <td>Country</td>
-                                    <td><span class="badge rounded-pill badge-light-info me-1">Scheduled</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>prajwal.pokhrel@gmail.com</td>
-                                    <td>
-                                        <span class="fw-bold">Angular Project</span>
-                                    </td>
-                                    <td>Peter Charls</td>
-                                    <td>9843194810</td>
-                                    <td>Citizenship</td>
-                                    <td>38017-2562</td>
-                                    <td>Country</td>
-                                    <td><span class="badge rounded-pill badge-light-warning me-1">Pending</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+
+                                <% if (passengers) { %>
+                                    <% passengers.map((passenger) => { %>
+                                        <tr>
+                                            <td><span class="fw-bold"><%= passenger.firstName %>&nbsp;<%= passenger.lastName %></span></td>
+                                            <td><%= passenger.email %></td>
+                                            <td><%= passenger.phoneNumber %></td>
+                                            <td><%= passenger.idType %></td>
+                                            <td><%= passenger.idNumber %></td>
+                                            <td><%= passenger.country %></td>
+                                            <td><%= passenger.isMainPassenger ? 'Yes' : 'No' %></td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
+                                                        <i data-feather="more-vertical"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a id="destinationDetailBtn" class="dropdown-item" href="/passenger/details/<%= passenger.id %>">
+                                                            <i data-feather='file-text' class="me-50"></i>
+                                                            <span>Details</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } %>
                                 </tbody>
                             </table>
                         </div>
@@ -370,6 +187,10 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- START: Footer -->
 <%- include('../includes/footer.ejs'); %>>
 <!-- END: Footer -->
+
+<!-- START: Custom OMIO JS -->
+<!--<script src="/omio-custom-assets/destination-delete-script.js"></script>-->
+<!-- END: Custom OMIO JS -->
 
 <!-- BEGIN: Vendor JS-->
 <script src="/app-assets/vendors/js/vendors.min.js"></script>

@@ -28,6 +28,7 @@ const createSingleData = async (req, res) => {
             where: {
                 seatOfBus: destination.assignedBusId
             },
+            attributes: {exclude: ['id']},
             raw: true
         });
         // console.log(seatsOfAssignedBus);
@@ -38,7 +39,7 @@ const createSingleData = async (req, res) => {
         res.redirect('/create-destination');
         // res.status(201).send(destination);
     } catch (error) {
-        console.log(error.message);
+        console.log(error);
     }
 }
 

@@ -41,7 +41,7 @@ module.exports = {
             },
             country: {
                 type: DataTypes.STRING,
-                allowNull: false
+                allowNull: true
             },
             isMainPassenger: {
                 type: DataTypes.BOOLEAN,

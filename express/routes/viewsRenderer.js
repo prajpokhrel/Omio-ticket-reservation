@@ -81,6 +81,36 @@ router.get('/destinations/all', async (req, res) => {
     }
 });
 
+router.get('/reservations/all', async (req, res) => {
+    try {
+        if (Object.entries(req.query).length !== 0) {
+            const params = {};
+            const filteredReservations = await axios.get('/reservations/search', {params});
+            res.render('data-display/display-reservations.ejs', {reservations: filteredReservations.data});
+        } else {
+            const reservations = await axios.get('/general-routes/reservations');
+            res.render('data-display/display-reservations.ejs', {reservations: reservations.data});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get('/passengers/all', async (req, res) => {
+    try {
+        if (Object.entries(req.query).length !== 0) {
+            const params = {};
+            const filteredPassengers = await axios.get('/passengers/search', {params});
+            res.render('data-display/display-passengers.ejs', {passengers: filteredPassengers.data});
+        } else {
+            const passengers = await axios.get('/general-routes/passengers');
+            res.render('data-display/display-passengers.ejs', {passengers: passengers.data});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get('/drivers/all', async (req, res) => {
     try {
         if (Object.entries(req.query).length !== 0) {

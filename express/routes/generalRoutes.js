@@ -10,7 +10,9 @@ const controllers = {
     destinations: require('../controllers/destinationsController'),
     places: require('../controllers/placesController'),
     users: require('../controllers/usersController'),
-    admins: require('../controllers/adminController')
+    admins: require('../controllers/adminController'),
+    reservations: require('../controllers/reservationsController'),
+    passengers: require('../controllers/passengersController')
     // other controllers...
 }
 

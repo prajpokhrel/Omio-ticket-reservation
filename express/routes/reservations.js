@@ -54,9 +54,9 @@ router.post('/book-seat', async (req, res) => {
           const addPassengers = await Passenger.bulkCreate(arrangedPassengers);
 
           // add reservation form [works fine, update table with decimal in price and then uncomment]
-          // const addReservation = await Reservation.create({
-          //      totalRouteFare, passengersCount, mainAccountId: mainUser.id, forDestination: selectedJourney.id
-          // });
+          await Reservation.create({
+               totalTravelAmount: totalRouteFare, totalPassenger: passengersCount, mainAccountId: mainUser.id, forDestination: selectedJourney.id
+          });
 
           // update seats as booked
           await RouteSpecificSeat.update({isBookedSeat: true}, {
