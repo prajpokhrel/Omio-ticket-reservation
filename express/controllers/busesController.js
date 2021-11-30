@@ -3,36 +3,36 @@ const { Bus, Driver, Destination } = require('../../sequelize/models');
 // expand these to services....
 // asyncErrors middleware to reduce try catch will be implemented later on
 const createSingleData = async (req, res) => {
-    console.log(req.body);
-    const {
-        busServiceName,
-        busNumber,
-        seatCapacity,
-        busServiceLogo,
-        busStatus,
-        driverId
-    } = req.body;
-
-    // multer will handle form image this
-    // this is a transaction, handle wisely, works for now
-    try {
-        if (req.body.id) {
-            res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
-        } else {
-            const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, seatCapacity, busStatus, driverId});
-            const updateDriverStatus = await Driver.update({driverStatus: 'assigned'}, {
-                where: {
-                    id: bus.driverId
-                }
-            });
-            res.redirect('/create-bus');
-            // res.status(201).send(bus);
-            // res.status(201).end();
-        }
-    } catch (error) {
-        console.log(error);
-        res.send(error.message);
-    }
+    // console.log(req.body);
+    // const {
+    //     busServiceName,
+    //     busNumber,
+    //     seatCapacity,
+    //     busServiceLogo,
+    //     busStatus,
+    //     driverId
+    // } = req.body;
+    //
+    // // multer will handle form image this
+    // // this is a transaction, handle wisely, works for now
+    // try {
+    //     if (req.body.id) {
+    //         res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
+    //     } else {
+    //         const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, seatCapacity, busStatus, driverId});
+    //         const updateDriverStatus = await Driver.update({driverStatus: 'assigned'}, {
+    //             where: {
+    //                 id: bus.driverId
+    //             }
+    //         });
+    //         res.redirect('/create-bus');
+    //         // res.status(201).send(bus);
+    //         // res.status(201).end();
+    //     }
+    // } catch (error) {
+    //     console.log(error);
+    //     res.send(error.message);
+    // }
 }
 
 const findAllData = async (req, res) => {

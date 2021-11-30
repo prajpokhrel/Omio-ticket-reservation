@@ -1,6 +1,9 @@
 const express = require('express');
-const { Bus } = require('../../sequelize/models');
+const { Bus, Driver} = require('../../sequelize/models');
 const { Op, Sequelize } = require('sequelize');
+const {busLogoUpload} = require('../middlewares/imageUpload');
+const fs = require('fs');
+
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -9,6 +12,34 @@ router.get('/', async (req, res) => {
         res.send(buses);
     } catch (error) {
         console.log(error.message);
+    }
+});
+
+router.post('/add-bus', busLogoUpload.single('busServiceLogo'), async (req, res) => {
+    console.log(req.body);
+    const {busServiceName, busNumber, seatCapacity, busStatus, driverId} = req.body;
+    const busServiceLogo = req.file.filename;
+    // multer will handle form image this
+    // this is a transaction, handle wisely, works for now
+    try {
+        if (req.body.id) {
+            res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
+        } else {
+            const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, seatCapacity, busStatus, driverId});
+            await Driver.update({driverStatus: 'assigned'}, {
+                where: {
+                    id: bus.driverId
+                }
+            });
+            res.redirect('/create-bus');
+        }
+    } catch (error) {
+        if (req.file) {
+            fs.unlink(req.file.path, (error) => {
+                console.log(error);
+            });
+        }
+        res.send(error.message);
     }
 });
 

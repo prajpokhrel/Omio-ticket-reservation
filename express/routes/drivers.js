@@ -1,6 +1,8 @@
 const express = require('express');
 const { Driver } = require('../../sequelize/models');
 const { Op, Sequelize} = require('sequelize');
+const {driverImageUpload} = require('../middlewares/imageUpload');
+const fs = require("fs");
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -12,6 +14,27 @@ router.get('/', async (req, res) => {
         });
         res.send(drivers);
     } catch (error) {
+        console.log(error.message);
+    }
+});
+
+router.post('/add-driver', driverImageUpload.single('driverImage'), async (req, res) => {
+    const {firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber} = req.body;
+    const driverImage = req.file.filename;
+    if (req.body.id) {
+        res.status(400).send("ID should not be supplied");
+    }
+
+    try {
+        const driver = await Driver.create({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage});
+        res.redirect('/create-driver');
+        // res.status(201).send(driver);
+    } catch (error) {
+        if (req.file) {
+            fs.unlink(req.file.path, (error) => {
+                console.log(error);
+            });
+        }
         console.log(error.message);
     }
 });

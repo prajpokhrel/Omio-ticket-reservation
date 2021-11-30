@@ -27,6 +27,10 @@ router.get('/forgot-password', (req, res) => {
     res.render('auth/forgot-password.ejs');
 });
 
+router.get('/confirmation', (req, res) => {
+    res.render('auth/confirmation-message.ejs');
+})
+
 router.get('/reset-password/:token/:userId', (req, res) => {
     res.render('auth/reset-password.ejs');
 });

@@ -1,4 +1,5 @@
 'use strict';
+const {DataTypes} = require("sequelize");
 module.exports = {
     up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable('passengers', {
@@ -51,6 +52,10 @@ module.exports = {
             // passenger for a certain destination, foreign key
             // this destination will contains details of bus, routes, fares, and everything
             forDestination: {
+                type: DataTypes.INTEGER,
+                allowNull: false
+            },
+            reservationId: {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },

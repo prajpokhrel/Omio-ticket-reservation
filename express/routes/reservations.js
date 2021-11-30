@@ -18,9 +18,9 @@ const pluck = (array, key) => {
      return array.map((item) => { return item[key]; });
 }
 
-const arrangePassengers = (passengers, journeyId, mainAccountUserId) => {
+const arrangePassengers = (passengers, journeyId, mainAccountUserId, reservationId) => {
      return passengers.map((passenger, index) => {
-          return {...passenger, isMainPassenger: index === 0 ? 'true' : 'false', forDestination: journeyId, mainAccountId: mainAccountUserId}
+          return {...passenger, isMainPassenger: index === 0 ? 'true' : 'false', forDestination: journeyId, mainAccountId: mainAccountUserId, reservationId}
      });
 }
 
@@ -49,14 +49,14 @@ router.post('/book-seat', async (req, res) => {
           const seatSpecificPrice = calculateSeatSpecificPrice(selectedSeats);
           const totalRouteFare = calculateTotalRoutePrice(seatSpecificPrice, selectedJourney.routeFare, selectedJourney.serviceTax, passengersCount);
 
-          // add passenger form
-          const arrangedPassengers = arrangePassengers(passengers, selectedJourney.id, mainUser.id);
-          const addPassengers = await Passenger.bulkCreate(arrangedPassengers);
-
           // add reservation form [works fine, update table with decimal in price and then uncomment]
-          await Reservation.create({
+          const reservation = await Reservation.create({
                totalTravelAmount: totalRouteFare, totalPassenger: passengersCount, mainAccountId: mainUser.id, forDestination: selectedJourney.id
           });
+
+          // add passenger form
+          const arrangedPassengers = arrangePassengers(passengers, selectedJourney.id, mainUser.id, reservation.id);
+          const addPassengers = await Passenger.bulkCreate(arrangedPassengers);
 
           // update seats as booked
           await RouteSpecificSeat.update({isBookedSeat: true}, {
@@ -69,6 +69,28 @@ router.post('/book-seat', async (req, res) => {
 
           res.send(addPassengers);
 
+     } catch (error) {
+          console.log(error);
+     }
+});
+
+router.get('/customer/:customerId/:reservationId', async (req, res) => {
+     // Do something later...
+});
+
+router.get('/customer/:id', async (req, res) => {
+     const customerId = req.params.id;
+     try {
+          const reservations = await Reservation.findAll({
+               where: {
+                    mainAccountId: customerId
+               },
+               include: ["destinationDetails", "passengers"],
+               order: [
+                   ['bookingTime', 'DESC']
+               ]
+          });
+          res.send(reservations);
      } catch (error) {
           console.log(error);
      }

@@ -3,27 +3,27 @@ const { Driver } = require('../../sequelize/models');
 // expand these to services....
 
 const createSingleData = async (req, res) => {
-    const {
-        firstName,
-        lastName,
-        email,
-        contactNumber,
-        citizenshipNumber,
-        licenseNumber,
-        driverImage
-    } = req.body;
-
-    if (req.body.id) {
-        res.status(400).send("ID should not be supplied");
-    }
-
-    try {
-        const driver = await Driver.create({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage});
-        res.redirect('/create-driver');
-        // res.status(201).send(driver);
-    } catch (error) {
-        console.log(error.message);
-    }
+    // const {
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     contactNumber,
+    //     citizenshipNumber,
+    //     licenseNumber,
+    //     driverImage
+    // } = req.body;
+    //
+    // if (req.body.id) {
+    //     res.status(400).send("ID should not be supplied");
+    // }
+    //
+    // try {
+    //     const driver = await Driver.create({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage});
+    //     res.redirect('/create-driver');
+    //     // res.status(201).send(driver);
+    // } catch (error) {
+    //     console.log(error.message);
+    // }
 }
 
 const findAllData = async (req, res) => {

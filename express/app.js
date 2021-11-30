@@ -39,13 +39,17 @@ app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 
 // sessions and flash
 
-
 // image upload code, ... later
+
 
 // app.set('views', './express/views');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'assets')));
+
+// app.use('/assets/admin/image', express.static(path.join(__dirname, 'assets/adminProfileImages')));
+// app.use('/assets/bus/image', express.static(path.join(__dirname, 'assets/busImages')));
+// app.use('/assets/driver/image', express.static(path.join(__dirname, 'assets/driverImages')));
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
