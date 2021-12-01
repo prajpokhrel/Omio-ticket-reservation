@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const {Op} = require('sequelize');
-const { Destination, RouteSpecificSeat, Passenger, Reservation } = require('../../sequelize/models');
+const {Op, Sequelize} = require('sequelize');
+const { Destination, RouteSpecificSeat, Passenger, Reservation, Bus } = require('../../sequelize/models');
 
 // doing all these in server, not to be tricked by client changing price value :D
 const calculateSeatSpecificPrice = (seats) => {
@@ -74,8 +74,82 @@ router.post('/book-seat', async (req, res) => {
      }
 });
 
+router.get('/search', async (req, res) => {
+     const fromSource = req.query.fromSource.toLowerCase();
+     const toDestination = req.query.toDestination.toLowerCase();
+     const departureDate = new Date(req.query.departureDate);
+     const [fromRange, toRange] = req.query.departureDateRange.split('to');
+     //handle this if no dates passed
+     const fromDateRange = new Date(fromRange.trim());
+     const toDateRange = new Date(toRange.trim());
+     const [firstName, lastName] = req.query.fullName.toLowerCase().split(' ', 2);
+     const email = req.query.email.toLowerCase();
+
+     try {
+          const filteredReservations = await Reservation.findAll({
+               where: {
+                    [Op.or]: [
+                         Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('destinationDetails.fromSource')), {
+                              [Op.substring]: fromSource
+                         }),
+                         Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('destinationDetails.toDestination')), {
+                              [Op.substring]: toDestination
+                         }),
+                         Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('mainUserDetails.firstName')), {
+                              [Op.substring]: firstName
+                         }),
+                         Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('mainUserDetails.lastName')), {
+                              [Op.substring]: lastName
+                         }),
+                         Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('mainUserDetails.email')), {
+                              [Op.substring]: email
+                         }),
+                         {
+                              '$destinationDetails.departureDate$': {
+                                   [Op.eq]: departureDate
+                              }
+                         },
+                         {
+                              '$destinationDetails.departureDate$': {
+                                   [Op.and]: {
+                                        [Op.gt]: fromDateRange,
+                                        [Op.lt]: toDateRange
+                                   }
+                              }
+                         }
+
+                    ]
+               },
+               include: ["mainUserDetails", "destinationDetails"]
+          });
+          res.send(filteredReservations);
+     } catch (error) {
+          console.log(error);
+     }
+});
+
 router.get('/customer/:customerId/:reservationId', async (req, res) => {
-     // Do something later...
+     const {customerId, reservationId} = req.params;
+     try {
+          const reservation = await Reservation.findOne({
+               where: {
+                    [Op.and]: {
+                         mainAccountId: customerId,
+                         id: reservationId
+                    }
+               },
+               include: ["destinationDetails", "passengers", "mainUserDetails"]
+          });
+          // nested eager loading can also be done. :D
+          const assignedBus = await Bus.findOne({
+               where: {
+                    id: reservation.destinationDetails.assignedBusId
+               }
+          });
+          res.json({reservation, assignedBus});
+     } catch (error) {
+          console.log(error);
+     }
 });
 
 router.get('/customer/:id', async (req, res) => {
@@ -85,7 +159,7 @@ router.get('/customer/:id', async (req, res) => {
                where: {
                     mainAccountId: customerId
                },
-               include: ["destinationDetails", "passengers"],
+               include: ["destinationDetails", "passengers"], // remove passengers, handled in detailed
                order: [
                    ['bookingTime', 'DESC']
                ]
@@ -96,5 +170,24 @@ router.get('/customer/:id', async (req, res) => {
      }
 });
 
+router.get('/:reservationId', async (req, res) => {
+     const reservationId = req.params.reservationId;
+     try {
+          const reservation = await Reservation.findOne({
+               where: {
+                    id: reservationId
+               },
+               include: ["destinationDetails", "passengers", "mainUserDetails"]
+          });
+          const assignedBus = await Bus.findOne({
+               where: {
+                    id: reservation.destinationDetails.assignedBusId
+               }
+          });
+          res.json({reservation, assignedBus});
+     } catch (error) {
+          console.log(error);
+     }
+});
 
 module.exports = router;

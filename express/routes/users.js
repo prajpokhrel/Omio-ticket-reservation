@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const {User} = require('../../sequelize/models');
+const {Op, Sequelize} = require('sequelize');
 const bcrypt = require('bcrypt');
 const requireAuth = require('../middlewares/requireAuth');
 
@@ -37,7 +38,7 @@ router.post('/auth/register', async (req, res) => {
         });
 
         const token = user.generateAuthToken();
-        res.cookie('omioClientJWT', token, {httpOnly: true, maxAge: maxAge * 1000, secure: true, sameSite: "none"});
+        res.cookie('omioClientJWT', token, {httpOnly: true, maxAge: maxAge * 1000, sameSite: 'none', secure: true});
         res.status(201).send({
             id: user.id,
             name: user.name,
@@ -62,12 +63,37 @@ router.post('/auth/login', async (req, res) => {
     if (!validPassword) return res.status(400).send('Invalid E-mail or Password.');
 
     const token = user.generateAuthToken();
-    res.cookie('omioClientJWT', token, {httpOnly: true, maxAge: maxAge * 1000, secure: true, sameSite: "none"});
+    res.cookie('omioClientJWT', token, {httpOnly: true, maxAge: maxAge * 1000, sameSite: "none", secure: true});
     res.status(200).json({userId: user.id});
 });
 
+router.get('/search', async (req, res) => {
+    const [firstName, lastName] = req.query.fullName.toLowerCase().split(' ', 2);
+    const email = req.query.email.toLowerCase();
+    try {
+        const filteredUsers = await User.findAll({
+            where: {
+                [Op.or]: [
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('firstName')), {
+                        [Op.substring]: firstName
+                    }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('lastName')), {
+                        [Op.substring]: lastName
+                    }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), {
+                        [Op.substring]: email
+                    })
+                ]
+            }
+        });
+        res.json(filteredUsers);
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get('/logout', requireAuth, (req, res) => {
-    res.cookie('omioClientJWT', '', {maxAge: 1, secure: true, sameSite: "none"});
+    res.cookie('omioClientJWT', '', {maxAge: 1, sameSite: "none", secure: true });
     res.send('Logged Out.');
 });
 

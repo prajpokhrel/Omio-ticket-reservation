@@ -125,7 +125,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                         <hr>
 
                                         <h6>Bus Image</h6>
-                                        <span><%= locals.busDetails.busServiceLogo %></span>
+                                        <img class="img-fluid" width="100" src="/busImages/<%= locals.busDetails.busServiceLogo %>" alt="bus-logo-img">
                                     </div>
                                 </div>
                             </div>
@@ -138,16 +138,17 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                 <div class="row">
                                     <div class="col-sm-6">
+                                        <h6>Profile Image</h6>
+                                        <img class="img-fluid avatar" width="100" height="100" src="/driverImages/<%= locals.busDetails.driverDetails.driverImage %>" alt="driver-img-logo">
+                                        <hr>
+
                                         <h6>Full Name</h6>
                                         <span><%= locals.busDetails.driverDetails.firstName %>&nbsp;<%= locals.busDetails.driverDetails.lastName %></span>
                                         <hr>
 
                                         <h6>E-Mail</h6>
                                         <span><%= locals.busDetails.driverDetails.email %></span>
-                                        <hr>
 
-                                        <h6>Contact</h6>
-                                        <span><%= locals.busDetails.driverDetails.contactNumber %></span>
                                     </div>
                                     <div class="col-sm-6">
                                         <h6>Citizenship Number</h6>
@@ -158,8 +159,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                         <span><%= locals.busDetails.driverDetails.licenseNumber %></span>
                                         <hr>
 
-                                        <h6>Profile Image</h6>
-                                        <span><%= locals.busDetails.driverDetails.driverImage %></span>
+                                        <h6>Contact</h6>
+                                        <span><%= locals.busDetails.driverDetails.contactNumber %></span>
+
                                     </div>
                                 </div>
                             </div>
@@ -183,30 +185,30 @@ License: You must have a valid license purchased only from themeforest(the above
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 col-xl-4">
-                        <div class="card shadow-none bg-transparent border-danger">
-                            <div class="card-body">
-                                <h4 class="card-title">Danger card title</h4>
-                                <p class="card-text">Some quick example text to build on the card title and make up.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4">
-                        <div class="card shadow-none bg-transparent border-secondary">
-                            <div class="card-body">
-                                <h4 class="card-title">Secondary card title</h4>
-                                <p class="card-text">Some quick example text to build on the card title and make up.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-xl-4">
-                        <div class="card shadow-none bg-transparent border-info">
-                            <div class="card-body">
-                                <h4 class="card-title">Info card title</h4>
-                                <p class="card-text">Some quick example text to build on the card title and make up.</p>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="col-md-6 col-xl-4">-->
+<!--                        <div class="card shadow-none bg-transparent border-danger">-->
+<!--                            <div class="card-body">-->
+<!--                                <h4 class="card-title">Danger card title</h4>-->
+<!--                                <p class="card-text">Some quick example text to build on the card title and make up.</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6 col-xl-4">-->
+<!--                        <div class="card shadow-none bg-transparent border-secondary">-->
+<!--                            <div class="card-body">-->
+<!--                                <h4 class="card-title">Secondary card title</h4>-->
+<!--                                <p class="card-text">Some quick example text to build on the card title and make up.</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="col-md-6 col-xl-4">-->
+<!--                        <div class="card shadow-none bg-transparent border-info">-->
+<!--                            <div class="card-body">-->
+<!--                                <h4 class="card-title">Info card title</h4>-->
+<!--                                <p class="card-text">Some quick example text to build on the card title and make up.</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </section>
             <!--/ Style variation -->

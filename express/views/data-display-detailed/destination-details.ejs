@@ -181,7 +181,8 @@ License: You must have a valid license purchased only from themeforest(the above
 
                                 <% if (locals.destinationDetails.passengers.length > 0) { %>
                                     <% locals.destinationDetails.passengers.map((passenger) => { %>
-                                        <span>All of there details will be here</span>
+                                        <b>Passenger Name:</b>&nbsp;<%= passenger.firstName %>&nbsp;<%= passenger.lastName %>
+                                        <b>E-mail:</b>&nbsp;<%= passenger.email %>&nbsp;<b>Contact:</b> <%= passenger.phoneNumber %>
                                         <hr>
                                     <% }); %>
                                 <% } else { %>

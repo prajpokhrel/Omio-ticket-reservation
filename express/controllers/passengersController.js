@@ -7,7 +7,9 @@ const createSingleData = async (req, res) => {
 
 const findAllData = async (req, res) => {
     try {
-        const passengers = await Passenger.findAll();
+        const passengers = await Passenger.findAll({
+            include: ['reservationDetails']
+        });
         res.send(passengers);
     } catch (error) {
         console.log(error);

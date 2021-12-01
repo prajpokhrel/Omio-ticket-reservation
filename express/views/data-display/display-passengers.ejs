@@ -108,16 +108,22 @@ License: You must have a valid license purchased only from themeforest(the above
                         <div class="card-body">
                             <form id="jquery-val-form" action="/passengers/all" method="get">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Passenger Name</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="fullName" placeholder="John Doe" />
+                                            <label class="form-label" for="fullName">Passenger Name</label>
+                                            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="John Doe" />
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-email">Passenger E-mail</label>
-                                            <input type="email" id="basic-default-email" name="email" class="form-control" placeholder="john.doe@email.com" />
+                                            <label class="form-label" for="email">Passenger E-mail</label>
+                                            <input type="email" id="email" name="email" class="form-control" placeholder="john.doe@email.com" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-1">
+                                            <label class="form-label" for="idNumber">Identity Number</label>
+                                            <input type="text" id="idNumber" name="idNumber" class="form-control" placeholder="38-01-70-05NP" />
                                         </div>
                                     </div>
 
@@ -138,7 +144,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <th>Id Type</th>
                                     <th>Id Number</th>
                                     <th>Country</th>
-                                    <th>Was Main Passenger?</th>
+                                    <th>Is Main Passenger?</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
@@ -160,7 +166,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                                         <i data-feather="more-vertical"></i>
                                                     </button>
                                                     <div class="dropdown-menu dropdown-menu-end">
-                                                        <a id="destinationDetailBtn" class="dropdown-item" href="/passenger/details/<%= passenger.id %>">
+                                                        <a id="destinationDetailBtn" class="dropdown-item" href="/reservation/details/<%= passenger.reservationDetails.id %>">
                                                             <i data-feather='file-text' class="me-50"></i>
                                                             <span>Details</span>
                                                         </a>

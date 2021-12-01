@@ -146,4 +146,9 @@ router.post('/resetPassword', async (req, res) => {
     res.redirect('/auth/login');
 });
 
+router.get('/logout', async (req, res) => {
+    req.logOut();
+    res.redirect('/auth/login');
+})
+
 module.exports = router;

@@ -1,4 +1,5 @@
 const { getIdParam } = require('../utils/helperMethods');
+const {User} = require('../../sequelize/models');
 // expand these to services....
 
 const createSingleData = async (req, res) => {
@@ -6,7 +7,12 @@ const createSingleData = async (req, res) => {
 }
 
 const findAllData = async (req, res) => {
-    // Do Stuffs...
+    try {
+        const users = await User.findAll();
+        res.send(users);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const findSingleDataById = async (req, res) => {

@@ -167,32 +167,24 @@ License: You must have a valid license purchased only from themeforest(the above
                         <!--                            <h4 class="card-title">Advanced Search</h4>-->
                         <!--                        </div>-->
                         <div class="card-body">
-                            <form id="jquery-val-form" method="post">
+                            <form id="jquery-val-form" action="/users/all" method="GET">
                                 <div class="row">
-
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">First Name</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
+                                            <label class="form-label" for="fullName">Full Name</label>
+                                            <input type="text" class="form-control" id="fullName" name="fullName" placeholder="John Doe" />
                                         </div>
                                     </div>
 
-                                    <div class="col-md-4">
+                                    <div class="col-md-6">
                                         <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Last Name</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
-                                        </div>
-                                    </div>
-
-                                    <div class="col-md-4">
-                                        <div class="mb-1">
-                                            <label class="form-label" for="basic-default-name">Email</label>
-                                            <input type="text" class="form-control" id="basic-default-name" name="basic-default-name" placeholder="John Doe" />
+                                            <label class="form-label" for="email">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="john123@gmail.com" />
                                         </div>
                                     </div>
 
                                     <div class="col-12">
-                                        <button type="submit" class="btn btn-primary me-2" name="submit" value="Submit">Search</button>
+                                        <button type="submit" class="btn btn-primary me-2">Search</button>
                                         <button type="reset" class="btn btn-outline-secondary">Reset</button>
                                     </div>
                                 </div>
@@ -209,102 +201,32 @@ License: You must have a valid license purchased only from themeforest(the above
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <span class="fw-bold">Angular Project</span>
-                                    </td>
-                                    <td>Peter Charls</td>
-                                    <td><span class="badge rounded-pill badge-light-primary me-1">Active</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="fw-bold">React Project</span>
-                                    </td>
-                                    <td>Ronald Frest</td>
-                                    <td><span class="badge rounded-pill badge-light-success me-1">Completed</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="fw-bold">Vuejs Project</span>
-                                    </td>
-                                    <td>Jack Obes</td>
-                                    <td><span class="badge rounded-pill badge-light-info me-1">Scheduled</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <span class="fw-bold">Bootstrap Project</span>
-                                    </td>
-                                    <td>Jerry Milton</td>
-                                    <td><span class="badge rounded-pill badge-light-warning me-1">Pending</span></td>
-                                    <td>
-                                        <div class="dropdown">
-                                            <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
-                                                <i data-feather="more-vertical"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end">
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="edit-2" class="me-50"></i>
-                                                    <span>Edit</span>
-                                                </a>
-                                                <a class="dropdown-item" href="#">
-                                                    <i data-feather="trash" class="me-50"></i>
-                                                    <span>Delete</span>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                <% if (locals.users) { %>
+                                    <% locals.users.map((user) => { %>
+                                        <tr>
+                                            <td>
+                                                <span class="fw-bold"><%= user.firstName %></span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-bold"><%= user.lastName %></span>
+                                            </td>
+                                            <td><%= user.email %></td>
+                                            <td>
+                                                <div class="dropdown">
+                                                    <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
+                                                        <i data-feather="more-vertical"></i>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end">
+                                                        <a class="dropdown-item" href="/user/details/<%= user.id %>">
+                                                            <i data-feather="file-text" class="me-50"></i>
+                                                            <span>Details</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } %>
                                 </tbody>
                             </table>
                         </div>

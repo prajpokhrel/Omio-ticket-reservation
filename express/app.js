@@ -1,6 +1,3 @@
-// if (process.env.NODE_ENV !== 'production') {
-//     require('dotenv').config();
-// }
 require('dotenv').config();
 const express = require('express');
 const Joi = require('joi');
@@ -18,14 +15,19 @@ const seatsRoutes = require('./routes/seats');
 const usersRoutes = require('./routes/users');
 const reservationsRoute = require('./routes/reservations');
 const passengersRoute = require('./routes/passengers');
+const adminsRoute = require('./routes/admin');
 
-const {sequelize, User} = require('../sequelize/models'); // it directly calls index.js
+const { sequelize } = require('../sequelize/models');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
+const methodOverride = require('method-override');
+
+// initialize sequelize with session store
+let SequelizeStore = require("connect-session-sequelize")(session.Store);
 
 const app = express();
 
@@ -35,7 +37,7 @@ initializePassport(passport);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: "http://localhost:3000"}));
 
 // sessions and flash
 
@@ -51,14 +53,21 @@ app.use(express.static(path.join(__dirname, 'assets')));
 // app.use('/assets/bus/image', express.static(path.join(__dirname, 'assets/busImages')));
 // app.use('/assets/driver/image', express.static(path.join(__dirname, 'assets/driverImages')));
 
+let myStore = new SequelizeStore({
+    db: sequelize
+});
 app.use(session({
     secret: process.env.SESSION_SECRET,
+    store: myStore,
     resave: false,
     saveUninitialized: false
 }));
+myStore.sync();
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(methodOverride('_method'));
 
 // routes here
 
@@ -76,69 +85,7 @@ app.use('/api/seats', seatsRoutes);
 app.use('/api/users', usersRoutes);
 app.use('/api/reservations', reservationsRoute);
 app.use('/api/passengers', passengersRoute);
-
-
-
-
-// app.get('/create-destinations', (req, res) => {
-//     res.render('data-create/create-destination.ejs');
-// });
-
-// app.get('/create-drivers', (req, res) => {
-//     res.render('data-create/create-driver.ejs');
-// });
-
-// app.get('/create-bus', (req, res) => {
-//     res.render('data-create/create-bus.ejs');
-// });
-
-// app.get('/create-seats', (req, res) => {
-//     res.render('data-create/create-seats.ejs');
-// })
-//
-// app.get('/form-template', (req, res) => {
-//     res.render('data-create/form-template-validated.ejs');
-// });
-
-// app.get('/get-buses', (req, res) => {
-//     res.render('data-display/display-buses.ejs');
-// });
-
-// app.get('/get-destinations', (req, res) => {
-//     res.render('data-display/display-destinations.ejs');
-// });
-
-// app.get('/get-drivers', (req, res) => {
-//     res.render('data-display/display-drivers.ejs');
-// });
-
-// app.get('/get-passengers', (req, res) => {
-//     res.render('data-display/display-passengers.ejs');
-// });
-//
-// app.get('/get-reservations', (req, res) => {
-//     res.render('data-display/display-reservations.ejs');
-// });
-//
-// app.get('/get-seats', (req, res) => {
-//     res.render('data-display/display-seats.ejs');
-// });
-//
-// app.get('/get-users', (req, res) => {
-//     res.render('data-display/display-users.ejs');
-// });
-//
-// app.get('/account', (req, res) => {
-//     res.render('users/account.ejs');
-// });
-//
-// app.get('/security', (req, res) =>{
-//     res.render('users/change-password.ejs');
-// });
-//
-// app.get('/data-display-template', (req, res) => {
-//     res.render('data-create/sample.ejs');
-// });
+app.use('/api/admins', adminsRoute);
 
 
 module.exports = app;

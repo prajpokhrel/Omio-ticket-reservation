@@ -81,11 +81,37 @@ router.get('/destinations/all', async (req, res) => {
     }
 });
 
+router.get('/users/all', async (req, res) => {
+    try {
+        if (Object.entries(req.query).length !== 0) {
+            const params = {
+                fullName: req.query.fullName,
+                email: req.query.email
+            };
+            const filteredUsers = await axios.get('/users/search', {params});
+            res.render('data-display/display-users.ejs', {users: filteredUsers.data});
+        } else {
+            const users = await axios.get('/general-routes/users');
+            res.render('data-display/display-users.ejs', {users: users.data});
+        }
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 router.get('/reservations/all', async (req, res) => {
     try {
         if (Object.entries(req.query).length !== 0) {
-            const params = {};
+            const params = {
+                fromSource: req.query.fromSource,
+                toDestination: req.query.toDestination,
+                departureDate: req.query.departureDate,
+                departureDateRange: req.query.departureDateRange,
+                fullName: req.query.fullName,
+                email: req.query.email
+            };
             const filteredReservations = await axios.get('/reservations/search', {params});
+            // res.send(filteredReservations.data);
             res.render('data-display/display-reservations.ejs', {reservations: filteredReservations.data});
         } else {
             const reservations = await axios.get('/general-routes/reservations');
@@ -99,7 +125,11 @@ router.get('/reservations/all', async (req, res) => {
 router.get('/passengers/all', async (req, res) => {
     try {
         if (Object.entries(req.query).length !== 0) {
-            const params = {};
+            const params = {
+                fullName: req.query.fullName,
+                email: req.query.email,
+                idNumber: req.query.idNumber
+            };
             const filteredPassengers = await axios.get('/passengers/search', {params});
             res.render('data-display/display-passengers.ejs', {passengers: filteredPassengers.data});
         } else {
@@ -133,8 +163,14 @@ router.get('/drivers/all', async (req, res) => {
     }
 });
 
-router.get('/profile', (req, res) => {
-    res.render('users/account.ejs');
+router.get('/profile', async (req, res) => {
+    const currentAdmin = req.user.id;
+    try {
+        const currentUser = await axios.get(`/admins/${currentAdmin}`);
+        res.render('users/account.ejs', {adminData: currentUser.data});
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 router.get('/change-password', (req, res) => {
@@ -192,6 +228,26 @@ router.get('/destination/details/:id', async (req, res) => {
         console.log(error.message);
     }
 });
+
+router.get('/passenger/details/:id', async (req, res) => {
+    const passengerId = req.params.id;
+    try {
+        const passengerDetails = await axios.get(`/passengers/${passengerId}`);
+        res.render('data-display-detailed/passenger-details.ejs', { passengerDetails: passengerDetails.data });
+    } catch (error) {
+        console.log(error);
+    }
+});
+
+router.get('/reservation/details/:id', async (req, res) => {
+    const reservationId = req.params.id;
+    try {
+        const reservationDetails = await axios.get(`/reservations/${reservationId}`);
+        res.render('data-display-detailed/reservation-details.ejs', {reservationDetails: reservationDetails.data});
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 
 module.exports = router;
