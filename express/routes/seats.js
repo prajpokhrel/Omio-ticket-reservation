@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Seat } = require('../../sequelize/models');
+const { Seat, Bus } = require('../../sequelize/models');
 
 // reduces [[{},{}],...,[{},{}]] to [{},{},..,{},{}]
 const reduceSeatMap = (seatData) => {
@@ -27,8 +27,14 @@ const combineSeatMap = (seatData) => {
 
 router.post('/create-bus-map', async (req, res) => {
     const seatData = reduceSeatMap(req.body);
+    const busId = req.body.selectedBus;
     try {
         const seats = await Seat.bulkCreate(seatData);
+        await Bus.update({assignedSeats: true}, {
+            where: {
+                id: busId
+            }
+        });
         res.json({redirect: '/create-bus-map'});
         // res.json({seatData: seats});
     } catch (error) {

@@ -2,38 +2,6 @@ const { getIdParam } = require('../utils/helperMethods');
 const { Bus, Driver, Destination } = require('../../sequelize/models');
 // expand these to services....
 // asyncErrors middleware to reduce try catch will be implemented later on
-const createSingleData = async (req, res) => {
-    // console.log(req.body);
-    // const {
-    //     busServiceName,
-    //     busNumber,
-    //     seatCapacity,
-    //     busServiceLogo,
-    //     busStatus,
-    //     driverId
-    // } = req.body;
-    //
-    // // multer will handle form image this
-    // // this is a transaction, handle wisely, works for now
-    // try {
-    //     if (req.body.id) {
-    //         res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
-    //     } else {
-    //         const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, seatCapacity, busStatus, driverId});
-    //         const updateDriverStatus = await Driver.update({driverStatus: 'assigned'}, {
-    //             where: {
-    //                 id: bus.driverId
-    //             }
-    //         });
-    //         res.redirect('/create-bus');
-    //         // res.status(201).send(bus);
-    //         // res.status(201).end();
-    //     }
-    // } catch (error) {
-    //     console.log(error);
-    //     res.send(error.message);
-    // }
-}
 
 const findAllData = async (req, res) => {
     try {
@@ -64,13 +32,13 @@ const updateSingleData = async (req, res) => {
         busServiceName,
         busNumber,
         busServiceLogo,
-        seatCapacity,
         busStatus,
         driverId
     } = req.body;
     const id = req.params.id;
     try {
-        const updatedBus = await Bus.update({busServiceName, busNumber, busServiceLogo, seatCapacity, busStatus, driverId}, {
+        // find bus for previous driver info, and then update, and update new driver to bus if thats the case
+        const updatedBus = await Bus.update({busServiceName, busNumber, busServiceLogo, busStatus, driverId}, {
             where: {
                 id: id
             }
@@ -90,6 +58,11 @@ const deleteSingleData = async (req, res) => {
                 id: id
             }
         });
+        await Driver.update({driverStatus: 'available'}, {
+            where: {
+                id: deletedBus.driverId
+            }
+        });
         if (deletedBus) {
             await deletedBus.destroy();
             res.sendStatus(200).json({"message": "Bus Deleted"});
@@ -104,7 +77,6 @@ const deleteSingleData = async (req, res) => {
 module.exports = {
     findAllData,
     findSingleDataById,
-    createSingleData,
     updateSingleData,
     deleteSingleData
 }

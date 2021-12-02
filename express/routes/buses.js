@@ -3,7 +3,6 @@ const { Bus, Driver} = require('../../sequelize/models');
 const { Op, Sequelize } = require('sequelize');
 const {busLogoUpload} = require('../middlewares/imageUpload');
 const fs = require('fs');
-
 const router = express.Router();
 
 router.get('/', async (req, res) => {
@@ -15,9 +14,22 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/with-no-seats', async (req, res) => {
+    try {
+        const busWithNoSeatsAssigned = await Bus.findAll({
+            where: {
+                assignedSeats: false
+            }
+        });
+        res.send(busWithNoSeatsAssigned);
+    } catch (error) {
+        console.log(error.message);
+    }
+});
+
 router.post('/add-bus', busLogoUpload.single('busServiceLogo'), async (req, res) => {
     console.log(req.body);
-    const {busServiceName, busNumber, seatCapacity, busStatus, driverId} = req.body;
+    const {busServiceName, busNumber, busStatus, driverId} = req.body;
     const busServiceLogo = req.file.filename;
     // multer will handle form image this
     // this is a transaction, handle wisely, works for now
@@ -25,7 +37,7 @@ router.post('/add-bus', busLogoUpload.single('busServiceLogo'), async (req, res)
         if (req.body.id) {
             res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
         } else {
-            const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, seatCapacity, busStatus, driverId});
+            const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, busStatus, driverId});
             await Driver.update({driverStatus: 'assigned'}, {
                 where: {
                     id: bus.driverId
@@ -49,7 +61,8 @@ router.get('/ready-for-route', async (req, res) => {
             where: {
                 busStatus: {
                     [Op.or]: ['available', 'en route']
-                }
+                },
+                assignedSeats: true
             }
         });
         res.send(availableBuses);

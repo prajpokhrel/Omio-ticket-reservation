@@ -1,5 +1,4 @@
 'use strict';
-
 module.exports = {
     up: async (queryInterface, DataTypes) => {
         await queryInterface.createTable('buses', {
@@ -22,9 +21,10 @@ module.exports = {
                 type: DataTypes.STRING,
                 allowNull: true
             },
-            seatCapacity: {
-                type: DataTypes.INTEGER,
-                allowNull: false
+            assignedSeats: {
+                type: DataTypes.BOOLEAN,
+                allowNull: false,
+                defaultValue: false
             },
             assignedRoutesCount: {
                 type: DataTypes.INTEGER,

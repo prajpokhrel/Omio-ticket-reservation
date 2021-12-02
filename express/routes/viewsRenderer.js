@@ -33,7 +33,7 @@ router.get('/create-destination', async (req, res) => {
 router.get('/create-bus-map', async (req, res) => {
     try {
         // this requires only buses who have not assigned any seats
-        const buses = await axios.get('/buses');
+        const buses = await axios.get('/buses/with-no-seats');
         res.render('data-create/create-seats.ejs', {buses: buses.data});
     } catch (error) {
         console.log(error);
@@ -191,7 +191,7 @@ router.get('/bus/edit/:id', async (req, res) => {
     try {
         const bus = await axios.get(`/general-routes/buses/${busId}`);
         // find all the available drivers as well as the driver from bus data,
-        // driver assigned to that bus
+        // driver assigned to that bus - done
         const drivers = await axios.get(`/drivers/${bus.data.driverId}`);
         res.render('data-update/update-bus.ejs', {drivers: drivers.data, bus: bus.data});
     } catch (error) {
