@@ -167,6 +167,31 @@ router.post('/resetPassword', async (req, res) => {
     res.send("password reset successful, redirect to login");
 });
 
+router.patch('/change-password', async (req, res) => {
+    const {password, newPassword} = req.body.formData;
+    const userId = req.body.currentUser.id;
+    try {
+        const currentLoggedUser = await User.findOne({
+            where: {
+                id: userId
+            }
+        });
+        const validPassword = await bcrypt.compare(password, currentLoggedUser.password);
+        if (!validPassword) return res.status(400).send('Your previous password do not match.');
+
+        const salt = await bcrypt.genSalt(10);
+        const updatedPassword = await bcrypt.hash(newPassword, salt);
+        await User.update({password: updatedPassword}, {
+            where: {
+                id: userId
+            }
+        });
+        res.send("Password change complete");
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get('/logout', requireAuth, (req, res) => {
     res.cookie('omioClientJWT', '', {maxAge: 1, sameSite: "none", secure: true });
     res.send('Logged Out.');
