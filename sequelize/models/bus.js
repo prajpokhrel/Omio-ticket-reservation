@@ -23,7 +23,10 @@ module.exports = (sequelize) => {
         busNumber: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                isAlphanumeric: true
+            }
         },
         busServiceLogo: {
             type: DataTypes.STRING,
@@ -42,7 +45,10 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM,
             values: ['available', 'en route' ,'unavailable'],
             allowNull: false,
-            defaultValue: 'available'
+            defaultValue: 'available',
+            validate: {
+                isIn: [['available', 'en route', 'unavailable']]
+            }
         },
         driverId: {
             type: DataTypes.INTEGER,

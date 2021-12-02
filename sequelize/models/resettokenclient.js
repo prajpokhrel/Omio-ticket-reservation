@@ -1,7 +1,7 @@
 'use strict';
 const { Model, DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
-    class ResetToken extends Model {
+    class ResetTokenClient extends Model {
         /**
          * Helper method for defining associations.
          * This method is not a part of Sequelize lifecycle.
@@ -11,8 +11,8 @@ module.exports = (sequelize) => {
             // define association here
         }
     }
-    ResetToken.init({
-        userId: {
+    ResetTokenClient.init({
+        clientId: {
             type: DataTypes.INTEGER,
             allowNull: false
         },
@@ -26,8 +26,8 @@ module.exports = (sequelize) => {
         }
     }, {
         sequelize,
-        tableName: 'resetTokens',
-        modelName: 'ResetToken',
+        tableName: 'resetTokenClients',
+        modelName: 'ResetTokenClient',
     });
-    return ResetToken;
+    return ResetTokenClient;
 };

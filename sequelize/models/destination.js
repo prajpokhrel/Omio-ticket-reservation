@@ -18,15 +18,24 @@ module.exports = (sequelize) => {
     Destination.init({
         fromSource: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         toDestination: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         routeFare: {
             type: DataTypes.DECIMAL(10, 2),
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isDecimal: true
+            }
         },
         serviceTax: {
             type: DataTypes.VIRTUAL,

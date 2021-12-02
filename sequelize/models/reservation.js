@@ -24,14 +24,20 @@ module.exports = (sequelize) => {
         },
         totalTravelAmount: {
             type: DataTypes.DECIMAL,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isDecimal: true
+            }
         },
         // enum: paid, not paid, cancelled/refunded
         paymentStatus: {
             type: DataTypes.ENUM,
             values: ['paid', 'refunded'],
             allowNull: false,
-            defaultValue: 'paid'
+            defaultValue: 'paid',
+            validate: {
+                isIn: [['paid', 'refunded']]
+            }
         },
         bookingTime: {
             type: DataTypes.DATE,
@@ -45,7 +51,10 @@ module.exports = (sequelize) => {
             type: DataTypes.ENUM,
             values: ['active', 'cancelled'],
             allowNull: false,
-            defaultValue: 'active'
+            defaultValue: 'active',
+            validate: {
+                isIn: [['active', 'cancelled']]
+            }
         },
         totalPassenger: {
             type: DataTypes.INTEGER,

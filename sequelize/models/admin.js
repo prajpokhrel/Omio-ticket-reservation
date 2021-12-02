@@ -14,11 +14,17 @@ module.exports = (sequelize) => {
     Admin.init({
         firstName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         lastName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         userName: {
             type: DataTypes.STRING,
@@ -28,7 +34,10 @@ module.exports = (sequelize) => {
         email: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true
+            unique: true,
+            validate: {
+                isEmail: true
+            }
         },
         password: {
             type: DataTypes.STRING,

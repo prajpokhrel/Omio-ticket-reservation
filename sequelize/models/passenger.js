@@ -23,16 +23,23 @@ module.exports = (sequelize) => {
                     if (value === null && this.isMainPassenger === true) {
                         throw new Error("Main passenger should have email address.")
                     }
-                }
+                },
+                isEmail: true
             }
         },
         firstName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         lastName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         phoneNumber: {
             type: DataTypes.STRING,
@@ -44,7 +51,10 @@ module.exports = (sequelize) => {
         },
         idNumber: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlphanumeric: true
+            }
         },
         country: {
             type: DataTypes.STRING,

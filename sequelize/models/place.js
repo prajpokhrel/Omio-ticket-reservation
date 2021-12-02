@@ -14,11 +14,11 @@ module.exports = (sequelize) => {
     Place.init({
         source: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         },
         destination: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
         }
     }, {
         sequelize,

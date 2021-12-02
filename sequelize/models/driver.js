@@ -16,15 +16,24 @@ module.exports = (sequelize) => {
     Driver.init({
         firstName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         lastName: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isAlpha: true
+            }
         },
         email: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isEmail: true
+            }
         },
         contactNumber: {
             type: DataTypes.STRING,
@@ -32,17 +41,22 @@ module.exports = (sequelize) => {
         },
         citizenshipNumber: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         licenseNumber: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         driverStatus: {
             type: DataTypes.ENUM,
             values: ['available', 'assigned', 'unavailable'],
             allowNull: false,
-            defaultValue: 'available'
+            defaultValue: 'available',
+            validate: {
+                isIn: [['available', 'assigned', 'unavailable']]
+            }
         },
         driverImage: {
             type: DataTypes.STRING,
