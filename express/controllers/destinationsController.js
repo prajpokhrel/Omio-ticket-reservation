@@ -20,10 +20,11 @@ const createSingleData = async (req, res) => {
         estimatedArrivalTime,
         assignedBusId
     } = req.body;
+    const adminId = req.user.id;
 
     // this is a transaction
     try {
-        const destination = await Destination.create({fromSource, toDestination, midPlaceBetweenRoutes, routeFare, departureDate, departureTime, arrivalDate, estimatedArrivalTime, assignedBusId});
+        const destination = await Destination.create({fromSource, toDestination, midPlaceBetweenRoutes, routeFare, departureDate, departureTime, arrivalDate, estimatedArrivalTime, assignedBusId, adminId});
         const seatsOfAssignedBus = await Seat.findAll({
             where: {
                 seatOfBus: destination.assignedBusId

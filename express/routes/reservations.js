@@ -18,9 +18,9 @@ const pluck = (array, key) => {
      return array.map((item) => { return item[key]; });
 }
 
-const arrangePassengers = (passengers, journeyId, mainAccountUserId, reservationId) => {
+const arrangePassengers = (passengers, journeyId, mainAccountUserId, reservationId, adminId) => {
      return passengers.map((passenger, index) => {
-          return {...passenger, isMainPassenger: index === 0 ? 'true' : 'false', forDestination: journeyId, mainAccountId: mainAccountUserId, reservationId}
+          return {...passenger, isMainPassenger: index === 0 ? 'true' : 'false', forDestination: journeyId, mainAccountId: mainAccountUserId, reservationId, adminId}
      });
 }
 
@@ -54,11 +54,12 @@ router.post('/book-seat', async (req, res) => {
                totalTravelAmount: totalRouteFare,
                totalPassenger: passengersCount,
                mainAccountId: mainUser.id,
-               forDestination: selectedJourney.id
+               forDestination: selectedJourney.id,
+               adminId: selectedJourney.adminId
           });
 
           // add passenger form
-          const arrangedPassengers = arrangePassengers(passengers, selectedJourney.id, mainUser.id, reservation.id);
+          const arrangedPassengers = arrangePassengers(passengers, selectedJourney.id, mainUser.id, reservation.id, selectedJourney.adminId);
           const addPassengers = await Passenger.bulkCreate(arrangedPassengers);
 
           // update seats as booked

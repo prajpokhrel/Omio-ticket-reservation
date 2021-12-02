@@ -3,6 +3,11 @@ const { Place } = require('../../sequelize/models');
 const fs = require('fs');
 
 const createSingleData = async (req, res) => {
+    // delete all records first
+    await Place.destroy({
+        truncate: true
+    });
+    // creates a new one
     const placesPath = "sequelize/places/route-destinations.json";
     fs.readFile(placesPath, async (error, data) => {
         if (error) {

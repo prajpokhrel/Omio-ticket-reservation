@@ -31,13 +31,14 @@ router.post('/add-bus', busLogoUpload.single('busServiceLogo'), async (req, res)
     console.log(req.body);
     const {busServiceName, busNumber, busStatus, driverId} = req.body;
     const busServiceLogo = req.file.filename;
+    const adminId = req.user.id;
     // multer will handle form image this
     // this is a transaction, handle wisely, works for now
     try {
         if (req.body.id) {
             res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
         } else {
-            const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, busStatus, driverId});
+            const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, busStatus, driverId, adminId});
             await Driver.update({driverStatus: 'assigned'}, {
                 where: {
                     id: bus.driverId

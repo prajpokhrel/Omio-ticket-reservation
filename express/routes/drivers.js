@@ -21,12 +21,13 @@ router.get('/', async (req, res) => {
 router.post('/add-driver', driverImageUpload.single('driverImage'), async (req, res) => {
     const {firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber} = req.body;
     const driverImage = req.file.filename;
+    const adminId = req.user.id;
     if (req.body.id) {
         res.status(400).send("ID should not be supplied");
     }
 
     try {
-        const driver = await Driver.create({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage});
+        const driver = await Driver.create({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage, adminId});
         res.redirect('/create-driver');
         // res.status(201).send(driver);
     } catch (error) {

@@ -7,12 +7,13 @@ module.exports = (sequelize) => {
          * This method is not a part of Sequelize lifecycle.
          * The `models/index` file will call this method automatically.
          */
-        static associate({Bus, Passenger, Reservation, RouteSpecificSeat}) {
+        static associate({Bus, Passenger, Reservation, RouteSpecificSeat, Admin}) {
             // define association here
             this.belongsTo(Bus, {foreignKey: "assignedBusId", as: "buses"});
             this.hasMany(Passenger, {foreignKey: "forDestination", as: "passengers"});
             this.hasMany(Reservation, {foreignKey: "forDestination", as: "reservations"});
             this.hasMany(RouteSpecificSeat, {foreignKey: "seatOfDestination", as: "routeSeats"});
+            this.belongsTo(Admin, {foreignKey: "adminId"});
         }
     }
     Destination.init({
@@ -65,6 +66,10 @@ module.exports = (sequelize) => {
             allowNull: false
         },
         assignedBusId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
+        },
+        adminId: {
             type: DataTypes.INTEGER,
             allowNull: false
         }
