@@ -1,8 +1,40 @@
 const { Passenger } = require('../../sequelize/models');
+const {Op, Sequelize} = require("sequelize");
 // expand these to services....
 
 const createSingleData = async (req, res) => {
     // Do Stuffs...
+}
+
+const searchPassengers = async (req, res) => {
+    const [firstName, lastName] = req.query.fullName.toLowerCase().split(' ', 2);
+    const email = req.query.email.toLowerCase();
+    const idNumber = req.query.idNumber.toLowerCase();
+
+    try {
+        const filteredPassengers = await Passenger.findAll({
+            where: {
+                [Op.or]: [
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('firstName')), {
+                        [Op.substring]: firstName
+                    }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('lastName')), {
+                        [Op.substring]: lastName
+                    }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('email')), {
+                        [Op.substring]: email
+                    }),
+                    Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('idNumber')), {
+                        [Op.substring]: idNumber
+                    })
+                ],
+                adminId: req.query.adminId
+            }
+        });
+        res.send(filteredPassengers);
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 const findAllData = async (req, res) => {
@@ -36,5 +68,6 @@ module.exports = {
     findSingleDataById,
     createSingleData,
     updateSingleData,
-    deleteSingleData
+    deleteSingleData,
+    searchPassengers
 }

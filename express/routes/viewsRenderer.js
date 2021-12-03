@@ -94,16 +94,17 @@ router.get('/destinations/all', async (req, res) => {
 
 router.get('/users/all', async (req, res) => {
     try {
+        const totalUsers = await axios.get('/users/total-users');
         if (Object.entries(req.query).length !== 0) {
             const params = {
                 fullName: req.query.fullName,
                 email: req.query.email
             };
             const filteredUsers = await axios.get('/users/search', {params});
-            res.render('data-display/display-users.ejs', {users: filteredUsers.data});
+            res.render('data-display/display-users.ejs', {users: filteredUsers.data, userCount: totalUsers.data.count});
         } else {
             const users = await axios.get('/general-routes/users');
-            res.render('data-display/display-users.ejs', {users: users.data});
+            res.render('data-display/display-users.ejs', {users: users.data, userCount: totalUsers.data.count});
         }
     } catch (error) {
         console.log(error);

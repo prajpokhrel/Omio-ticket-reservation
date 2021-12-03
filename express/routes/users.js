@@ -192,6 +192,15 @@ router.patch('/change-password', async (req, res) => {
     }
 });
 
+router.get('/total-users', async (req, res) => {
+    try {
+        const count = await User.count();
+        res.json({count});
+    } catch (error) {
+        console.log(error);
+    }
+});
+
 router.get('/logout', requireAuth, (req, res) => {
     res.cookie('omioClientJWT', '', {maxAge: 1, sameSite: "none", secure: true });
     res.send('Logged Out.');
