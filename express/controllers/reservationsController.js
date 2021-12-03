@@ -9,6 +9,9 @@ const createSingleData = async (req, res) => {
 const findAllData = async (req, res) => {
     try {
         const reservations = await Reservation.findAll({
+            where: {
+                adminId: req.query.adminId
+            },
             include: ["mainUserDetails", "destinationDetails"]
         });
         res.send(reservations);

@@ -9,7 +9,10 @@ router.get('/', (req, res) => {
 router.get('/create-bus', async (req, res) => {
     try {
         // only available drivers who are not assigned to any buses
-        const drivers = await axios.get('/drivers');
+        const params = {
+            adminId: req.user.id
+        }
+        const drivers = await axios.get('/drivers', {params});
         res.render('data-create/create-bus.ejs', {drivers: drivers.data});
     } catch (error) {
         console.log(error);
@@ -23,7 +26,10 @@ router.get('/create-driver', (req, res) => {
 router.get('/create-destination', async (req, res) => {
     try {
         // where status === available, en route add to controller
-        const buses = await axios.get('/buses/ready-for-route');
+        const params = {
+            adminId: req.user.id
+        }
+        const buses = await axios.get('/buses/ready-for-route', {params});
         res.render('data-create/create-destination.ejs', {buses: buses.data});
     } catch (error) {
         console.log(error);
@@ -33,7 +39,10 @@ router.get('/create-destination', async (req, res) => {
 router.get('/create-bus-map', async (req, res) => {
     try {
         // this requires only buses who have not assigned any seats
-        const buses = await axios.get('/buses/with-no-seats');
+        const params = {
+            adminId: req.user.id
+        }
+        const buses = await axios.get('/buses/with-no-seats', {params});
         res.render('data-create/create-seats.ejs', {buses: buses.data});
     } catch (error) {
         console.log(error);
@@ -42,17 +51,18 @@ router.get('/create-bus-map', async (req, res) => {
 
 router.get('/buses/all', async (req, res) => {
     try {
+        const params = {
+            busServiceName: req.query.busServiceName,
+            busNumber: req.query.busNumber,
+            adminId: req.user.id
+        };
         if (Object.entries(req.query).length !== 0) {
-            const params = {
-                busServiceName: req.query.busServiceName,
-                busNumber: req.query.busNumber
-            };
             // const { busServiceName, busNumber } = req.query;
             const filteredBuses = await axios.get('/buses/search', {params});
             // res.json(filteredBuses.data);
             res.render('data-display/display-buses.ejs', {buses: filteredBuses.data});
         } else {
-            const buses = await axios.get('/general-routes/buses');
+            const buses = await axios.get('/general-routes/buses', {params});
             res.render('data-display/display-buses.ejs', { buses: buses.data});
         }
     } catch (error) {
@@ -62,18 +72,19 @@ router.get('/buses/all', async (req, res) => {
 
 router.get('/destinations/all', async (req, res) => {
     try {
+        const params = {
+            fromSource: req.query.fromSource,
+            toDestination: req.query.toDestination,
+            departureDate: req.query.departureDate,
+            departureDateRange: req.query.departureDateRange,
+            adminId: req.user.id
+        };
         if (Object.entries(req.query).length !== 0) {
-            const params = {
-                fromSource: req.query.fromSource,
-                toDestination: req.query.toDestination,
-                departureDate: req.query.departureDate,
-                departureDateRange: req.query.departureDateRange
-            };
             const filteredDestinations = await axios.get('/destinations/search', {params});
             // res.send(filteredDestinations.data);
             res.render('data-display/display-destinations.ejs', {destinations: filteredDestinations.data});
         } else  {
-            const destinations = await axios.get('/general-routes/destinations');
+            const destinations = await axios.get('/general-routes/destinations', {params});
             res.render('data-display/display-destinations.ejs', {destinations: destinations.data});
         }
     } catch (error) {
@@ -101,20 +112,21 @@ router.get('/users/all', async (req, res) => {
 
 router.get('/reservations/all', async (req, res) => {
     try {
+        const params = {
+            fromSource: req.query.fromSource,
+            toDestination: req.query.toDestination,
+            departureDate: req.query.departureDate,
+            departureDateRange: req.query.departureDateRange,
+            fullName: req.query.fullName,
+            email: req.query.email,
+            adminId: req.user.id
+        };
         if (Object.entries(req.query).length !== 0) {
-            const params = {
-                fromSource: req.query.fromSource,
-                toDestination: req.query.toDestination,
-                departureDate: req.query.departureDate,
-                departureDateRange: req.query.departureDateRange,
-                fullName: req.query.fullName,
-                email: req.query.email
-            };
             const filteredReservations = await axios.get('/reservations/search', {params});
             // res.send(filteredReservations.data);
             res.render('data-display/display-reservations.ejs', {reservations: filteredReservations.data});
         } else {
-            const reservations = await axios.get('/general-routes/reservations');
+            const reservations = await axios.get('/general-routes/reservations', {params});
             res.render('data-display/display-reservations.ejs', {reservations: reservations.data});
         }
     } catch (error) {
@@ -124,16 +136,17 @@ router.get('/reservations/all', async (req, res) => {
 
 router.get('/passengers/all', async (req, res) => {
     try {
+        const params = {
+            fullName: req.query.fullName,
+            email: req.query.email,
+            idNumber: req.query.idNumber,
+            adminId: req.user.id
+        };
         if (Object.entries(req.query).length !== 0) {
-            const params = {
-                fullName: req.query.fullName,
-                email: req.query.email,
-                idNumber: req.query.idNumber
-            };
             const filteredPassengers = await axios.get('/passengers/search', {params});
             res.render('data-display/display-passengers.ejs', {passengers: filteredPassengers.data});
         } else {
-            const passengers = await axios.get('/general-routes/passengers');
+            const passengers = await axios.get('/general-routes/passengers', {params});
             res.render('data-display/display-passengers.ejs', {passengers: passengers.data});
         }
     } catch (error) {
@@ -143,19 +156,20 @@ router.get('/passengers/all', async (req, res) => {
 
 router.get('/drivers/all', async (req, res) => {
     try {
+        const params = {
+            fullName: req.query.fullName,
+            email: req.query.email,
+            contactNumber: req.query.contactNumber,
+            citizenshipNumber: req.query.citizenshipNumber,
+            licenseNumber: req.query.licenseNumber,
+            adminId: req.user.id
+        }
         if (Object.entries(req.query).length !== 0) {
-            const params = {
-                fullName: req.query.fullName,
-                email: req.query.email,
-                contactNumber: req.query.contactNumber,
-                citizenshipNumber: req.query.citizenshipNumber,
-                licenseNumber: req.query.licenseNumber,
-            }
             // res.send(params);
             const filteredDrivers = await axios.get('/drivers/search', {params});
             res.render('data-display/display-drivers', { drivers: filteredDrivers.data });
         } else {
-            const drivers = await axios.get('/general-routes/drivers');
+            const drivers = await axios.get('/general-routes/drivers', {params});
             res.render('data-display/display-drivers', { drivers: drivers.data });
         }
     } catch (error) {
@@ -178,8 +192,11 @@ router.get('/change-password', (req, res) => {
 });
 
 router.get('/seats/all', async (req, res) => {
+    const params = {
+        adminId: req.user.id
+    }
     try {
-        const buses = await axios.get('/buses');
+        const buses = await axios.get('/buses', {params});
         res.render('data-display/display-seats', {buses: buses.data});
     } catch (error) {
         console.log(error);
@@ -188,11 +205,14 @@ router.get('/seats/all', async (req, res) => {
 
 router.get('/bus/edit/:id', async (req, res) => {
     const busId = req.params.id;
+    const params = {
+        adminId: req.user.id
+    };
     try {
         const bus = await axios.get(`/general-routes/buses/${busId}`);
         // find all the available drivers as well as the driver from bus data,
         // driver assigned to that bus - done
-        const drivers = await axios.get(`/drivers/${bus.data.driverId}`);
+        const drivers = await axios.get(`/drivers/${bus.data.driverId}`, {params});
         res.render('data-update/update-bus.ejs', {drivers: drivers.data, bus: bus.data});
     } catch (error) {
         console.log(error.message);

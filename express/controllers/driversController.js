@@ -9,6 +9,9 @@ const createSingleData = async (req, res) => {
 const findAllData = async (req, res) => {
     try {
         const drivers = await Driver.findAll({
+            where: {
+                adminId: req.query.adminId
+            },
             order: [
                 ['createdAt', 'DESC']
             ]

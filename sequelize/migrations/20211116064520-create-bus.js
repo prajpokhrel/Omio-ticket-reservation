@@ -39,7 +39,11 @@ module.exports = {
             },
             driverId: {
                 type: DataTypes.INTEGER,
-                allowNull: true,
+                allowNull: false,
+            },
+            adminId: {
+                type: DataTypes.INTEGER,
+                allowNull: false
             },
             createdAt: {
                 allowNull: false,

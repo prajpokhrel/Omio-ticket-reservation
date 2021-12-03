@@ -23,6 +23,10 @@ module.exports = (sequelize) => {
             allowNull: false,
             defaultValue: DataTypes.UUIDV1
         },
+        seatsNumber: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
         totalTravelAmount: {
             type: DataTypes.DECIMAL,
             allowNull: false,

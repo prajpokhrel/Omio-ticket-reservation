@@ -8,6 +8,9 @@ const createSingleData = async (req, res) => {
 const findAllData = async (req, res) => {
     try {
         const passengers = await Passenger.findAll({
+            where: {
+                adminId: req.query.adminId
+            },
             include: ['reservationDetails']
         });
         res.send(passengers);

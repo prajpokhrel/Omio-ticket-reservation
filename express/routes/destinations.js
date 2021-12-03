@@ -34,7 +34,8 @@ router.get('/search', async (req, res) => {
                             }
                         }
                     }
-                ]
+                ],
+                adminId: req.query.adminId
             }
         });
         res.json(filteredDestinations);

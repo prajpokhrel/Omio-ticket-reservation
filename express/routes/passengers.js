@@ -24,7 +24,8 @@ router.get('/search', async (req, res) => {
                     Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('idNumber')), {
                         [Op.substring]: idNumber
                     })
-                ]
+                ],
+                adminId: req.query.adminId
             }
         });
         res.send(filteredPassengers);

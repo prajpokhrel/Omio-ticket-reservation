@@ -46,7 +46,11 @@ const createSingleData = async (req, res) => {
 
 const findAllData = async (req, res) => {
     try {
-        const destinations = await Destination.findAll();
+        const destinations = await Destination.findAll({
+            where: {
+                adminId: req.query.adminId
+            }
+        });
         // const destinations = await Destination.findAll({
         //     include: ['buses']
         // });

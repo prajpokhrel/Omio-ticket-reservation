@@ -9,7 +9,8 @@ router.get('/', async (req, res) => {
     try {
         const drivers = await Driver.findAll({
             where: {
-                driverStatus: 'available'
+                driverStatus: 'available',
+                adminId: req.query.adminId
             }
         });
         res.send(drivers);
@@ -69,7 +70,8 @@ router.get('/search', async (req, res) => {
                     Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('licenseNumber')), {
                         [Op.substring]: licenseNumber
                     }),
-                ]
+                ],
+                adminId: req.query.adminId
             },
             order: [
                 ['createdAt', 'DESC']
@@ -89,7 +91,8 @@ router.get('/:driverId', async (req, res) => {
                 [Op.or]: {
                     driverStatus: 'available',
                     id: driverId
-                }
+                },
+                adminId: req.query.adminId
             }
         });
         res.send(drivers);

@@ -41,6 +41,10 @@ module.exports = {
                 type: DataTypes.INTEGER,
                 allowNull: false
             },
+            adminId: {
+                type: DataTypes.INTEGER,
+                allowNUll: false
+            },
             createdAt: {
                 allowNull: false,
                 type: DataTypes.DATE

@@ -7,7 +7,11 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     try {
-        const buses = await Bus.findAll();
+        const buses = await Bus.findAll({
+            where: {
+                adminId: req.query.adminId
+            }
+        });
         res.send(buses);
     } catch (error) {
         console.log(error.message);
@@ -18,7 +22,8 @@ router.get('/with-no-seats', async (req, res) => {
     try {
         const busWithNoSeatsAssigned = await Bus.findAll({
             where: {
-                assignedSeats: false
+                assignedSeats: false,
+                adminId: req.query.adminId
             }
         });
         res.send(busWithNoSeatsAssigned);
@@ -63,7 +68,8 @@ router.get('/ready-for-route', async (req, res) => {
                 busStatus: {
                     [Op.or]: ['available', 'en route']
                 },
-                assignedSeats: true
+                assignedSeats: true,
+                adminId: req.query.adminId
             }
         });
         res.send(availableBuses);
@@ -88,7 +94,8 @@ router.get('/search', async (req, res) => {
                     Sequelize.where(Sequelize.fn('LOWER', Sequelize.col('busNumber')), {
                         [Op.substring]: busNumber
                     })
-                ]
+                ],
+                adminId: req.query.adminId
             }
         });
         res.json(filteredBuses);

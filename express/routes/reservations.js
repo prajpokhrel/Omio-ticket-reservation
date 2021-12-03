@@ -10,6 +10,14 @@ const calculateSeatSpecificPrice = (seats) => {
      }, 0);
 }
 
+const setSeatsNumber = (seats) => {
+     const selectedSeats = [];
+     seats.map((seat) => {
+          selectedSeats.push(`${seat.row}${seat.col}`);
+     });
+     return selectedSeats.join(', ');
+}
+
 const calculateTotalRoutePrice = (reservedSeatPrice, routeFare, serviceTax, passengers) => {
      return parseFloat(reservedSeatPrice) + (parseFloat(routeFare) + parseFloat(serviceTax)) * passengers;
 }
@@ -48,9 +56,11 @@ router.post('/book-seat', async (req, res) => {
 
           const seatSpecificPrice = calculateSeatSpecificPrice(selectedSeats);
           const totalRouteFare = calculateTotalRoutePrice(seatSpecificPrice, selectedJourney.routeFare, selectedJourney.serviceTax, passengersCount);
+          const setSelectedSeatNumber = setSeatsNumber(selectedSeats);
 
           // add reservation form [works fine, update table with decimal in price and then uncomment]
           const reservation = await Reservation.create({
+               seatsNumber: setSelectedSeatNumber,
                totalTravelAmount: totalRouteFare,
                totalPassenger: passengersCount,
                mainAccountId: mainUser.id,
@@ -122,7 +132,8 @@ router.get('/search', async (req, res) => {
                               }
                          }
 
-                    ]
+                    ],
+                    adminId: req.query.adminId
                },
                include: ["mainUserDetails", "destinationDetails"]
           });

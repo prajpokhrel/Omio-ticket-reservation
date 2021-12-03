@@ -6,9 +6,12 @@ const { Bus, Driver, Destination } = require('../../sequelize/models');
 const findAllData = async (req, res) => {
     try {
         const buses = await Bus.findAll({
+            where: {
+                adminId: req.query.adminId
+            },
             order: [
                 ['createdAt', 'DESC']
-            ]
+            ],
         });
         // const buses = await Bus.findAll({include: ['driverDetails']});
         res.status(200).send(buses);
