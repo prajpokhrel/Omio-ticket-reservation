@@ -29,7 +29,8 @@ const searchPassengers = async (req, res) => {
                     })
                 ],
                 adminId: req.query.adminId
-            }
+            },
+            include: ['reservationDetails']
         });
         res.send(filteredPassengers);
     } catch (error) {

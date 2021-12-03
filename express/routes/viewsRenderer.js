@@ -1,9 +1,21 @@
 const express = require('express');
 const axios = require('../axios-omio');
+const {Passenger, Destination, Reservation, Place, Driver, Bus, User} = require('../../sequelize/models');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send(`<h1>Welcome to OMIO</h1> ${req.user.email}`);
+router.get('/', async (req, res) => {
+    try {
+        const totalPassengers = await Passenger.count();
+        const totalRoutes = await Place.count();
+        const totalDrivers = await Driver.count();
+        const totalReservations = await Reservation.count();
+        const totalBuses = await Bus.count();
+        const totalUsers = await User.count();
+        const totalDestinations = await Destination.count();
+        res.render('dashboard.ejs', {totalPassengers, totalRoutes, totalUsers, totalDestinations, totalBuses, totalDrivers, totalReservations});
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 router.get('/create-bus', async (req, res) => {
