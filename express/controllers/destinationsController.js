@@ -63,7 +63,6 @@ const createSingleData = async (req, res) => {
     const {
         fromSource,
         toDestination,
-        midPlaceBetweenRoutes,
         routeFare,
         departureDate,
         departureTime,
@@ -75,7 +74,7 @@ const createSingleData = async (req, res) => {
 
     // this is a transaction
     try {
-        const destination = await Destination.create({fromSource, toDestination, midPlaceBetweenRoutes, routeFare, departureDate, departureTime, arrivalDate, estimatedArrivalTime, assignedBusId, adminId});
+        const destination = await Destination.create({fromSource, toDestination, routeFare, departureDate, departureTime, arrivalDate, estimatedArrivalTime, assignedBusId, adminId});
         const seatsOfAssignedBus = await Seat.findAll({
             where: {
                 seatOfBus: destination.assignedBusId
