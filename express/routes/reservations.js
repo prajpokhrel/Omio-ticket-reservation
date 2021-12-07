@@ -14,4 +14,6 @@ router.get('/customer/:id', reservationsController.getAllReservationsOfCustomer)
 
 router.get('/:reservationId', reservationsController.detailedReservationDetails);
 
+router.get('/:bookingId/:email', reservationsController.getBookingInvoice);
+
 module.exports = router;

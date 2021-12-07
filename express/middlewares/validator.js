@@ -4,7 +4,8 @@ const userValidationRules = () => {
     return [
         body('firstName').isAlpha().notEmpty().isLength({min: 3}).trim(),
         body('lastName').isAlpha().notEmpty().isLength({min: 3}).trim(),
-        body('email').isEmail().notEmpty().trim()
+        body('email').isEmail().notEmpty().trim(),
+        body('password').notEmpty().isStrongPassword().trim()
     ]
 };
 
@@ -13,7 +14,8 @@ const adminValidationRules = () => {
         body('firstName').isAlpha().notEmpty().isLength({min: 3}).trim(),
         body('lastName').isAlpha().notEmpty().isLength({min: 3}).trim(),
         body('userName').isAlphanumeric().notEmpty().isLength({min: 3}).trim(),
-        body('email').isEmail().notEmpty().trim()
+        body('email').isEmail().notEmpty().trim(),
+        body('password').notEmpty().isStrongPassword().trim()
     ]
 }
 

@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const Joi = require('joi');
 
+const error = require('./middlewares/error');
+
 const viewsRenderer = require('./routes/viewsRenderer');
 const authViewsRenderer = require('./routes/authViewsRenderer');
 
@@ -39,10 +41,6 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors({credentials: true, origin: "http://localhost:3000"}));
 
-// sessions and flash
-
-// image upload code, ... later
-
 
 // app.set('views', './express/views');
 app.set('views', path.join(__dirname, 'views'));
@@ -70,7 +68,6 @@ app.use(flash());
 app.use(methodOverride('_method'));
 
 // routes here
-
 app.use('/', viewsRenderer);
 app.use('/auth', authViewsRenderer);
 
@@ -86,6 +83,8 @@ app.use('/api/users', usersRoutes);
 app.use('/api/reservations', reservationsRoute);
 app.use('/api/passengers', passengersRoute);
 app.use('/api/admins', adminsRoute);
+
+app.use(error);
 
 
 module.exports = app;

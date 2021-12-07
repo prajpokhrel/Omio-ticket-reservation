@@ -10,11 +10,15 @@ router.get('/', busesController.getAllBuses);
 
 router.get('/with-no-seats', busesController.getBusesWithNoSeatsAssigned);
 
+router.get('/with-seats', busesController.getBusesWithSeatsAssigned);
+
 router.post('/add-bus', busLogoUpload.single('busServiceLogo'), busesController.addNewBus);
 
 router.get('/ready-for-route', busesController.busesReadyForRoutes);
 
 router.get('/search', busesController.searchBuses);
+
+router.patch('/update/:id', busLogoUpload.single('busServiceLogo'), busesController.updateBus)
 
 router.get('/:id', busesController.busWithDriverAndDestinations);
 

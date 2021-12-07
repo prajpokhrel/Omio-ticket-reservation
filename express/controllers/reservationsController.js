@@ -1,5 +1,5 @@
 const { getIdParam } = require('../utils/helperMethods');
-const { Reservation, Destination, RouteSpecificSeat, Passenger, Bus} = require('../../sequelize/models');
+const { User, Reservation, Destination, RouteSpecificSeat, Passenger, Bus, sequelize} = require('../../sequelize/models');
 const {Op, Sequelize} = require("sequelize");
 // expand these to services....
 
@@ -41,49 +41,54 @@ const reserveASeat = async (req, res) => {
     const passengersCount = passengers.length;
 
     try {
-        const selectedJourney = await Destination.findOne({
-            where: {
-                id: journeyId
-            }
+        await sequelize.transaction(async (t) => {
+            const selectedJourney = await Destination.findOne({
+                where: {
+                    id: journeyId
+                },
+                transaction: t
+            });
+            const selectedSeats = await RouteSpecificSeat.findAll({
+                where: {
+                    id: {
+                        [Op.or]: seatsId
+                    }
+                },
+                transaction: t
+            });
+
+            const seatSpecificPrice = calculateSeatSpecificPrice(selectedSeats);
+            const totalRouteFare = calculateTotalRoutePrice(seatSpecificPrice, selectedJourney.routeFare, selectedJourney.serviceTax, passengersCount);
+            const setSelectedSeatNumber = setSeatsNumber(selectedSeats);
+
+            // add reservation form [works fine, update table with decimal in price and then uncomment]
+            const reservation = await Reservation.create({
+                seatsNumber: setSelectedSeatNumber,
+                totalTravelAmount: totalRouteFare,
+                totalPassenger: passengersCount,
+                mainAccountId: mainUser.id,
+                forDestination: selectedJourney.id,
+                adminId: selectedJourney.adminId
+            }, {transaction: t});
+
+            // add passenger form
+            const arrangedPassengers = arrangePassengers(passengers, selectedJourney.id, mainUser.id, reservation.id, selectedJourney.adminId);
+            const addPassengers = await Passenger.bulkCreate(arrangedPassengers, {transaction: t});
+
+            // update seats as booked
+            await RouteSpecificSeat.update({isBookedSeat: true}, {
+                where: {
+                    id: {
+                        [Op.or]: seatsId
+                    }
+                },
+                transaction: t
+            });
+
+            return res.status(200).send(addPassengers);
         });
-        const selectedSeats = await RouteSpecificSeat.findAll({
-            where: {
-                id: {
-                    [Op.or]: seatsId
-                }
-            }
-        });
-
-        const seatSpecificPrice = calculateSeatSpecificPrice(selectedSeats);
-        const totalRouteFare = calculateTotalRoutePrice(seatSpecificPrice, selectedJourney.routeFare, selectedJourney.serviceTax, passengersCount);
-        const setSelectedSeatNumber = setSeatsNumber(selectedSeats);
-
-        // add reservation form [works fine, update table with decimal in price and then uncomment]
-        const reservation = await Reservation.create({
-            seatsNumber: setSelectedSeatNumber,
-            totalTravelAmount: totalRouteFare,
-            totalPassenger: passengersCount,
-            mainAccountId: mainUser.id,
-            forDestination: selectedJourney.id,
-            adminId: selectedJourney.adminId
-        });
-
-        // add passenger form
-        const arrangedPassengers = arrangePassengers(passengers, selectedJourney.id, mainUser.id, reservation.id, selectedJourney.adminId);
-        const addPassengers = await Passenger.bulkCreate(arrangedPassengers);
-
-        // update seats as booked
-        await RouteSpecificSeat.update({isBookedSeat: true}, {
-            where: {
-                id: {
-                    [Op.or]: seatsId
-                }
-            }
-        });
-
-        res.send(addPassengers);
-
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -137,8 +142,9 @@ const searchReservations = async (req, res) => {
             },
             include: ["mainUserDetails", "destinationDetails"]
         });
-        res.send(filteredReservations);
+        res.status(200).send(filteredReservations);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -159,6 +165,7 @@ const detailedReservationDetails = async (req, res) => {
         });
         res.json({reservation, assignedBus});
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -184,7 +191,28 @@ const getCustomerSpecificReservationDetails = async (req, res) => {
         });
         res.json({reservation, assignedBus});
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
+    }
+}
+
+const getBookingInvoice = async (req, res) => {
+    const {bookingId, email} = req.params;
+    console.log(bookingId, email);
+    try {
+        const getUser = await User.findOne({
+            where: {
+                email: email
+            }
+        });
+        const getReservation = await Reservation.findOne({
+            where: {
+                bookingCode: bookingId
+            }
+        });
+        res.json({userId: getUser.id, reservationId: getReservation.id});
+    } catch (error) {
+        res.status(500).send(error);
     }
 }
 
@@ -200,8 +228,9 @@ const getAllReservationsOfCustomer = async (req, res) => {
                 ['bookingTime', 'DESC']
             ]
         });
-        res.send(reservations);
+        res.status(200).send(reservations);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -218,8 +247,9 @@ const findAllData = async (req, res) => {
             },
             include: ["mainUserDetails", "destinationDetails"]
         });
-        res.send(reservations);
+        res.status(200).send(reservations);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -246,5 +276,6 @@ module.exports = {
     searchReservations,
     getCustomerSpecificReservationDetails,
     getAllReservationsOfCustomer,
-    detailedReservationDetails
+    detailedReservationDetails,
+    getBookingInvoice
 }

@@ -16,8 +16,9 @@ const getAllAvailableDrivers = async (req, res) => {
                 adminId: req.query.adminId
             }
         });
-        res.send(drivers);
+        res.status(200).send(drivers);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -31,15 +32,28 @@ const addNewDriver = async (req, res) => {
     }
 
     try {
-        const driver = await Driver.create({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage, adminId});
-        res.redirect('/create-driver');
-        // res.status(201).send(driver);
+        const getDriver = await Driver.findOne({
+            where: {
+                [Op.or]: {
+                    citizenshipNumber: citizenshipNumber,
+                    licenseNumber: licenseNumber
+                }
+            }
+        });
+        if (getDriver) {
+            res.status(400).send("Driver's citizenship or license number should be unique");
+        } else {
+            const driver = await Driver.create({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverImage, adminId});
+            res.redirect('/create-driver');
+            // res.status(201).send(driver);
+        }
     } catch (error) {
         if (req.file) {
             fs.unlink(req.file.path, (error) => {
                 console.log(error);
             });
         }
+        res.status(400).send(error.message);
         console.log(error.message);
     }
 }
@@ -82,6 +96,7 @@ const driversSearch = async (req, res) => {
         });
         res.json(filteredDrivers);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -98,8 +113,9 @@ const findCurrentDriverWithAllAvailableDrivers = async (req, res) => {
                 adminId: req.query.adminId
             }
         });
-        res.send(drivers);
+        res.status(200).send(drivers);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -114,8 +130,9 @@ const findAllData = async (req, res) => {
                 ['createdAt', 'DESC']
             ]
         });
-        res.send(drivers);
+        res.status(200).send(drivers);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -128,32 +145,27 @@ const findSingleDataById = async (req, res) => {
                 id: driverId
             }
         });
-        res.send(driver);
+        res.status(200).send(driver);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
 
-const updateSingleData = async (req, res) => {
-    const {
-        firstName,
-        lastName,
-        email,
-        contactNumber,
-        citizenshipNumber,
-        licenseNumber,
-        driverImage,
-        driverStatus
-    } = req.body;
+const updateDriver = async (req, res) => {
+    const {firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverStatus} = req.body;
+    const driverImage = req.file.filename;
     const id = req.params.id;
 
     try {
-        const updatedDriver = await Driver.update({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverStatus, driverImage},
+        await Driver.update({firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber, driverStatus, driverImage},
             {
                 where: {id: id}
             });
-        res.status(200).send(updatedDriver);
+        res.redirect('/drivers/all');
+        // res.status(200).send(updatedDriver);
     } catch (error) {
+        res.status(400).send(error.message);
         console.log(error.message);
     }
 }
@@ -170,9 +182,10 @@ const deleteSingleData = async (req, res) => {
             await deletedDriver.destroy();
             res.sendStatus(200).json({"message": "Driver Deleted"});
         } else {
-            res.send("Driver Not Found");
+            res.status(404).send("Driver Not Found");
         }
     } catch (error) {
+        res.status(500).send(error.message);
         res.send(error.message);
     }
 }
@@ -181,7 +194,7 @@ module.exports = {
     findAllData,
     findSingleDataById,
     createSingleData,
-    updateSingleData,
+    updateDriver,
     deleteSingleData,
     getAllAvailableDrivers,
     addNewDriver,

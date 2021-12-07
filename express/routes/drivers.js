@@ -12,6 +12,8 @@ router.post('/add-driver', driverImageUpload.single('driverImage'), driversContr
 
 router.get('/search', driversController.driversSearch);
 
+router.patch('/update/:id', driverImageUpload.single('driverImage'), driversController.updateDriver);
+
 router.get('/:driverId', driversController.findCurrentDriverWithAllAvailableDrivers);
 
 module.exports = router;

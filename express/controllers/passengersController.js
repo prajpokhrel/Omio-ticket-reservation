@@ -32,8 +32,9 @@ const searchPassengers = async (req, res) => {
             },
             include: ['reservationDetails']
         });
-        res.send(filteredPassengers);
+        res.status(200).send(filteredPassengers);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -46,8 +47,9 @@ const findAllData = async (req, res) => {
             },
             include: ['reservationDetails']
         });
-        res.send(passengers);
+        res.status(200).send(passengers);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }

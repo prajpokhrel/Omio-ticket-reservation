@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
 
-    <title>Register Page - Vuexy - Bootstrap HTML admin template</title>
+    <title>Register</title>
     <link rel="apple-touch-icon" href="/app-assets/images/ico/apple-icon-120.html">
     <link rel="shortcut icon" type="image/x-icon" href="https://pixinvent.com/demo/vuexy-html-bootstrap-admin-template/app-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
@@ -112,7 +112,13 @@
         </a>
 
         <h4 class="card-title mb-1">Adventure starts here 🚀</h4>
-        <p class="card-text mb-2">Make your app management easy and fun!</p>
+        <p class="card-text mb-2">Make your bus management easy and fun!</p>
+
+          <p>
+              <% if(message) { %>
+                  <span class="small text-danger"><%= message %></span>
+              <% } %>
+          </p>
 
         <form class="auth-register-form mt-2" action="/api/auth/register" method="POST">
 

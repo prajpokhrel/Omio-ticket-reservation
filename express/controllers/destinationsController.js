@@ -1,10 +1,9 @@
 const { getIdParam } = require('../utils/helperMethods');
-const { Destination, RouteSpecificSeat, Seat } = require('../../sequelize/models');
+const { Destination, RouteSpecificSeat, Seat, sequelize } = require('../../sequelize/models');
 const {Op, Sequelize} = require("sequelize");
 
 const updateSeatConfiguration = (seats, busId, destinationId) => {
     return seats.map((seat) => {
-        console.log(seat);
         return {...seat, seatOfBus: busId, seatOfDestination: destinationId}
     });
 };
@@ -55,6 +54,7 @@ const searchDestinations = async (req, res) => {
         });
         res.json(filteredDestinations);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -74,22 +74,31 @@ const createSingleData = async (req, res) => {
 
     // this is a transaction
     try {
-        const destination = await Destination.create({fromSource, toDestination, routeFare, departureDate, departureTime, arrivalDate, estimatedArrivalTime, assignedBusId, adminId});
-        const seatsOfAssignedBus = await Seat.findAll({
-            where: {
-                seatOfBus: destination.assignedBusId
-            },
-            attributes: {exclude: ['id']},
-            raw: true
-        });
-        // console.log(seatsOfAssignedBus);
-        const configuredSeats = updateSeatConfiguration(seatsOfAssignedBus, destination.assignedBusId, destination.id);
-        // res.send({config: configuredSeats});
-        await RouteSpecificSeat.bulkCreate(configuredSeats);
+        await sequelize.transaction(async (t) => {
+            const destination = await Destination.create(
+                {fromSource, toDestination,
+                    routeFare, departureDate,
+                    departureTime, arrivalDate,
+                    estimatedArrivalTime,
+                    assignedBusId, adminId}, {transaction: t});
+            const seatsOfAssignedBus = await Seat.findAll({
+                where: {
+                    seatOfBus: destination.assignedBusId
+                },
+                attributes: {exclude: ['id']},
+                raw: true,
+                transaction: t
+            });
+            // console.log(seatsOfAssignedBus);
+            const configuredSeats = updateSeatConfiguration(seatsOfAssignedBus, destination.assignedBusId, destination.id);
+            // res.send({config: configuredSeats});
+            await RouteSpecificSeat.bulkCreate(configuredSeats, {transaction: t});
 
-        res.redirect('/create-destination');
-        // res.status(201).send(destination);
+            return res.redirect('/create-destination');
+            // res.status(201).send(destination);
+        });
     } catch (error) {
+        res.status(400).send(error.message);
         console.log(error);
     }
 }
@@ -122,9 +131,10 @@ const availableDestinationsForCustomers = async (req, res) => {
         });
         res.json(foundRoutes);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
-    res.json({fromSource, toDestination, travelers, departureDate});
+    // res.json({fromSource, toDestination, travelers, departureDate});
 }
 
 const destinationDetailsWithSeats = async (req, res) => {
@@ -147,6 +157,7 @@ const destinationDetailsWithSeats = async (req, res) => {
         const combinedSeatData = combineSeatMap(journeySpecificSeats);
         res.json({journeyDetails: journeyDetails, specificJourneySeats: combinedSeatData});
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -160,8 +171,9 @@ const destinationDetailsWithBus = async (req, res) => {
             },
             include: ["buses"]
         });
-        res.send(journeyDetails);
+        res.status(200).send(journeyDetails);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -175,8 +187,9 @@ const destinationDetailsWithBusAndPassengers = async (req, res) => {
             },
             include: ["buses", "passengers"]
         });
-        res.send(destination);
+        res.status(200).send(destination);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -193,6 +206,7 @@ const findAllData = async (req, res) => {
         // });
         res.status(200).send(destinations);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -221,8 +235,9 @@ const updateSingleData = async (req, res) => {
                 id: id
             }
         });
-        res.send(updatedDestination);
+        res.status(200).send(updatedDestination);
     } catch (error) {
+        res.status(400).send(error.message);
         console.log(error.message);
     }
 }
@@ -240,9 +255,10 @@ const deleteSingleData = async (req, res) => {
             await deletedDestination.destroy();
             res.sendStatus(200).json({"message": "Destination Deleted"});
         } else {
-            res.send("Destination Not Found");
+            res.status(404).send("Destination Not Found");
         }
     } catch (error) {
+        res.status(500).send(error.message);
         res.send(error.message);
     }
 }

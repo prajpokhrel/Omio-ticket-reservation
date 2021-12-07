@@ -1,4 +1,4 @@
-const { Seat, Bus } = require('../../sequelize/models');
+const { Seat, Bus, sequelize } = require('../../sequelize/models');
 
 // reduces [[{},{}],...,[{},{}]] to [{},{},..,{},{}]
 const reduceSeatMap = (seatData) => {
@@ -27,14 +27,18 @@ const createBusMap = async (req, res) => {
     const seatData = reduceSeatMap(req.body);
     const busId = req.body.selectedBus;
     try {
-        const seats = await Seat.bulkCreate(seatData);
-        await Bus.update({assignedSeats: true}, {
-            where: {
-                id: busId
-            }
+        await sequelize.transaction(async (t) => {
+            await Seat.bulkCreate(seatData, {transaction: t});
+            await Bus.update({assignedSeats: true}, {
+                where: {
+                    id: busId
+                },
+                transaction: t
+            });
+            return res.json({redirect: '/create-bus-map'});
         });
-        res.json({redirect: '/create-bus-map'});
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
@@ -49,13 +53,39 @@ const getBusMapSpecificToBus = async (req, res) => {
         });
 
         const combinedSeatData = combineSeatMap(seats);
-        res.send({seatData: combinedSeatData});
+        res.status(200).send({seatData: combinedSeatData});
     } catch (error) {
+        res.status(500).send(error.message);
+        console.log(error);
+    }
+}
+
+const deleteSeats = async (req, res) => {
+    const busId = req.params.busId;
+    try {
+        await sequelize.transaction(async (t) => {
+            await Seat.destroy({
+                where: {
+                    seatOfBus: busId
+                },
+                transaction: t
+            });
+            await Bus.update({assignedSeats: false}, {
+                where: {
+                    id: busId
+                },
+                transaction: t
+            });
+            return res.status(200).send("Seats deleted.");
+        });
+    } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
 
 module.exports = {
     createBusMap,
-    getBusMapSpecificToBus
+    getBusMapSpecificToBus,
+    deleteSeats
 }

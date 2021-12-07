@@ -10,18 +10,21 @@ const sendEmail = require('../services/sendEmailService');
 const maxAge = 3 * 24 * 60 * 60;
 
 router.get('/me', requireAuth, async (req, res) => {
-    const user = await User.findOne({
-        where: {
-            id: req.currentUser.id
-        },
-        attributes: { exclude: ['password'] }
-    });
-    res.status(200).send(user);
+    try {
+        const user = await User.findOne({
+            where: {
+                id: req.currentUser.id
+            },
+            attributes: { exclude: ['password'] }
+        });
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 
 router.post('/auth/register', async (req, res) => {
     try {
-        // validate error using joo req.body
 
         const {firstName, lastName, email} = req.body;
 
@@ -48,25 +51,43 @@ router.post('/auth/register', async (req, res) => {
             password: user.password
         });
     } catch (error) {
-        console.log(error);
-        // maybe redirect to register page
+        res.status(400).send(error.message);
     }
 });
 
+router.patch('/update/:id', requireAuth, async (req, res) => {
+   const userId = req.params.id;
+   const {firstName, lastName, email} = req.body;
+   try {
+       await User.update({firstName, lastName, email}, {
+           where: {
+               id: userId
+           }
+       });
+       res.status(200).send("updated");
+   } catch (error) {
+       res.status(400).send(error.message);
+   }
+});
+
 router.post('/auth/login', async (req, res) => {
-    let user = await User.findOne({
-        where: {
-            email: req.body.email
-        }
-    });
-    if (!user) return res.status(400).send('Invalid E-mail or Password.');
+    try {
+        let user = await User.findOne({
+            where: {
+                email: req.body.email
+            }
+        });
+        if (!user) return res.status(400).send('Invalid E-mail or Password.');
 
-    const validPassword = await bcrypt.compare(req.body.password, user.password);
-    if (!validPassword) return res.status(400).send('Invalid E-mail or Password.');
+        const validPassword = await bcrypt.compare(req.body.password, user.password);
+        if (!validPassword) return res.status(400).send('Invalid E-mail or Password.');
 
-    const token = user.generateAuthToken();
-    res.cookie('omioClientJWT', token, {httpOnly: true, maxAge: maxAge * 1000, sameSite: "none", secure: true});
-    res.status(200).json({userId: user.id});
+        const token = user.generateAuthToken();
+        res.cookie('omioClientJWT', token, {httpOnly: true, maxAge: maxAge * 1000, sameSite: "none", secure: true});
+        res.status(200).json({userId: user.id});
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
 });
 
 router.get('/search', async (req, res) => {
@@ -90,84 +111,92 @@ router.get('/search', async (req, res) => {
         });
         res.json(filteredUsers);
     } catch (error) {
-        console.log(error);
+        res.status(500).send(error.message);
     }
 });
 
 router.post('/requestResetPassword', async (req, res) => {
-    const { forgotEmail } = req.body;
+    try {
+        const { forgotEmail } = req.body;
 
-    const user = await User.findOne({
-        where: {
-            email: forgotEmail
-        }
-    });
-    if (!user) res.status(400).send("Email address does not exists.");
-    let token = await ResetTokenClient.findOne({
-        where: {
-            clientId: user.id
-        }
-    });
-    if (token) await token.destroy();
-    let resetToken = crypto.randomBytes(32).toString("hex");
-    const hash = await bcrypt.hash(resetToken, 10);
-    const saveToken = await ResetTokenClient.create({
-        clientId: user.id,
-        token: hash
-    });
+        const user = await User.findOne({
+            where: {
+                email: forgotEmail
+            }
+        });
+        if (!user) res.status(400).send("Email address does not exists.");
+        let token = await ResetTokenClient.findOne({
+            where: {
+                clientId: user.id
+            }
+        });
+        if (token) await token.destroy();
+        let resetToken = crypto.randomBytes(32).toString("hex");
+        const hash = await bcrypt.hash(resetToken, 10);
+        const saveToken = await ResetTokenClient.create({
+            clientId: user.id,
+            token: hash
+        });
 
-    let resetLink = `http://localhost:3000/users/reset-password/${resetToken}/${user.id}`;
-    await sendEmail(
-        user.email,
-        "Password Reset Request",
-        `Name: ${user.firstName} & Reset Link: ${resetLink}`
-    );
-    res.send("Please check your email for further instructions about your password reset.");
+        let resetLink = `http://localhost:3000/users/reset-password/${resetToken}/${user.id}`;
+        await sendEmail(
+            user.email,
+            "Password Reset Request",
+            `Name: ${user.firstName} & Reset Link: ${resetLink}`
+        );
+        res.status(200).send("Please check your email for further instructions about your password reset.");
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
 });
 
 router.post('/resetPassword', async (req, res) => {
-    const {userId, token} = req.body;
-    const {newPassword} = req.body.newPassword;
+    try {
+        const {userId, token} = req.body;
+        const {newPassword} = req.body.newPassword;
 
-    let passwordResetToken = await ResetTokenClient.findOne({
-        where: {
-            clientId: userId
+        let passwordResetToken = await ResetTokenClient.findOne({
+            where: {
+                clientId: userId
+            }
+        });
+
+        if (!passwordResetToken) {
+            throw new Error("Invalid or expired password reset token.");
         }
-    });
 
-    if (!passwordResetToken) {
-        throw new Error("Invalid or expired password reset token.");
+        const isValid = await bcrypt.compare(token, passwordResetToken.token);
+        if (!isValid) {
+            throw new Error("Invalid or expired password reset token.");
+        }
+
+        const hash = await bcrypt.hash(newPassword, 10);
+
+        await User.update({password: hash}, {
+            where: {
+                id: userId
+            }
+        });
+
+        const user = await User.findOne({
+            where: {
+                id: userId
+            }
+        });
+
+        await sendEmail(
+            user.email,
+            "Password Reset Successful.",
+            "You have reset your password, you can login."
+        )
+        await passwordResetToken.destroy();
+        res.status(200).send("password reset successful, redirect to login");
+    } catch (error) {
+        res.status(400).send(error.message);
     }
-
-    const isValid = await bcrypt.compare(token, passwordResetToken.token);
-    if (!isValid) {
-        throw new Error("Invalid or expired password reset token.");
-    }
-
-    const hash = await bcrypt.hash(newPassword, 10);
-
-    await User.update({password: hash}, {
-        where: {
-            id: userId
-        }
-    });
-
-    const user = await User.findOne({
-        where: {
-            id: userId
-        }
-    });
-
-    await sendEmail(
-        user.email,
-        "Password Reset Successful.",
-        "You have reset your password, you can login."
-    )
-    await passwordResetToken.destroy();
-    res.send("password reset successful, redirect to login");
 });
 
-router.patch('/change-password', async (req, res) => {
+router.patch('/change-password', requireAuth, async (req, res) => {
     const {password, newPassword} = req.body.formData;
     const userId = req.body.currentUser.id;
     try {
@@ -186,9 +215,9 @@ router.patch('/change-password', async (req, res) => {
                 id: userId
             }
         });
-        res.send("Password change complete");
+        res.status(200).send("Password change complete");
     } catch (error) {
-        console.log(error);
+        res.status(400).send(error.message);
     }
 });
 
@@ -197,7 +226,7 @@ router.get('/total-users', async (req, res) => {
         const count = await User.count();
         res.json({count});
     } catch (error) {
-        console.log(error);
+        res.status(500).send(error.message);
     }
 });
 

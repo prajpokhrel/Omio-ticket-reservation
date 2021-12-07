@@ -5,19 +5,23 @@ const {Sequelize, Op} = require("sequelize");
 const axios = require("../axios-omio");
 
 const createSingleData = async (req, res) => {
-    // delete all records first
-    await Place.destroy({
-        truncate: true
-    });
-    // creates a new one
-    const placesPath = "sequelize/places/route-destinations.json";
-    fs.readFile(placesPath, async (error, data) => {
-        if (error) {
-            console.log(error);
-        }
-        const places = await Place.bulkCreate(JSON.parse(data));
-        res.send(places);
-    });
+    try {
+        // delete all records first
+        await Place.destroy({
+            truncate: true
+        });
+        // creates a new one
+        const placesPath = "sequelize/places/route-destinations.json";
+        fs.readFile(placesPath, async (error, data) => {
+            if (error) {
+                console.log(error);
+            }
+            const places = await Place.bulkCreate(JSON.parse(data));
+            res.status(200).send(places);
+        });
+    } catch (error) {
+        res.status(400).send(error.message);
+    }
 }
 
 const getAllDistinctSources = async (req, res) => {
@@ -27,9 +31,9 @@ const getAllDistinctSources = async (req, res) => {
                 [Sequelize.fn('DISTINCT', Sequelize.col('source')) , 'source'],
             ]
         });
-        res.send(places);
+        res.status(200).send(places);
     } catch (error) {
-        res.send(error);
+        res.status(500).send(error);
     }
 }
 
@@ -55,6 +59,7 @@ const getBusSpecificSource = async (req, res) => {
             res.json({"currentRoute": latestDestination});
         }
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -68,8 +73,9 @@ const getAvailableDestinationsBasedOnSource = async (req, res) => {
             },
             attributes: ['destination']
         });
-        res.send(availableDestination);
+        res.status(200).send(availableDestination);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.response);
     }
 }
@@ -77,8 +83,9 @@ const getAvailableDestinationsBasedOnSource = async (req, res) => {
 const findAllData = async (req, res) => {
     try {
         const places = await Place.findAll();
-        res.send(places);
+        res.status(200).send(places);
     } catch (error) {
+        res.status(500).send(error.message);
         res.send(error.message);
     }
 }

@@ -22,7 +22,7 @@ License: You must have a valid license purchased only from themeforest(the above
     <meta name="description" content="Vuexy admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
     <meta name="keywords" content="admin template, Vuexy admin template, dashboard template, flat admin template, responsive admin template, web app">
     <meta name="author" content="PIXINVENT">
-    <title>Form Validation - Vuexy - Bootstrap HTML admin template</title>
+    <title>Update bus</title>
     <link rel="apple-touch-icon" href="/app-assets/images/ico/apple-icon-120.html">
     <link rel="shortcut icon" type="image/x-icon" href="https://pixinvent.com/demo/vuexy-html-bootstrap-admin-template/app-assets/images/ico/favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600" rel="stylesheet">
@@ -114,7 +114,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!--                                </h4>-->
 <!--                            </div>-->
                             <div class="card-body">
-                                <form id="jquery-val-form" method="POST" action="#">
+                                <form id="jquery-val-form" enctype="multipart/form-data" method="POST" action="/api/buses/update/<%= locals.bus.id %>?_method=PATCH">
                                     <div class="row">
                                         <div class="col-md-6 col-12">
                                             <div class="mb-1">
@@ -130,17 +130,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 <input value="<%= locals.bus.busNumber %>" type="text" class="form-control" id="busNumber" name="busNumber" placeholder="PA 23 KTM 5423"/>
                                             </div>
                                         </div>
-                                        <div class="col-md-6 col-12">
-                                            <div class="mb-1">
-                                                <label class="form-label" for="busSeatCapacity">Seat Capacity</label>
-                                                <input value="<%= locals.bus.seatCapacity %>" type="number" max="50" min="12" class="form-control" id="busSeatCapacity" name="seatCapacity" placeholder="44"/>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6 col-12">
+                                        <div class="col-12">
                                             <div class="mb-1">
                                                 <label for="busServiceLogo" class="form-label">Bus Logo <span class="text-warning">*or a company logo</span></label>
-                                                <input value="<%= locals.bus.busServiceLogo %>" class="form-control" accept="image/*" type="file" id="busServiceLogo" name="busServiceLogo" />
+                                                <input value="<%= locals.bus.busServiceLogo %>" class="form-control" accept="image/*" type="file" id="busServiceLogo" name="busServiceLogo" /><br>
+                                                <img src="/busImages/<%= locals.bus.busServiceLogo %>" class="img-fluid" width="100" alt="update bus image">
                                             </div>
                                         </div>
 
@@ -151,9 +145,9 @@ License: You must have a valid license purchased only from themeforest(the above
                                                 </label>
                                                 <select class="form-select select2" id="busStatus" name="busStatus">
                                                     <option value="">Select Bus Status</option>
-                                                    <option <%= locals.bus.busStatus === 'available' ? 'selected' : '' %> value="1">available</option>
-                                                    <option <%= locals.bus.busStatus === 'en route' ? 'selected' : '' %> value="En Route">en route</option>
-                                                    <option <%= locals.bus.busStatus === 'unavailable' ? 'selected' : '' %> value="Not Available">unavailable</option>
+                                                    <option <%= locals.bus.busStatus === 'available' ? 'selected' : '' %> value="available">available</option>
+                                                    <option <%= locals.bus.busStatus === 'en route' ? 'selected' : '' %> value="en route">en route</option>
+                                                    <option <%= locals.bus.busStatus === 'unavailable' ? 'selected' : '' %> value="unavailable">unavailable</option>
                                                 </select>
                                             </div>
                                         </div>

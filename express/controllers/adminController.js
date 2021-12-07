@@ -18,9 +18,9 @@ const findAdminById = async (req, res) => {
                 id: adminId
             }
         });
-        res.send(admin);
+        res.status(200).send(admin);
     } catch (error) {
-        console.log(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -55,7 +55,7 @@ const updateAdminProfile = async (req, res) => {
                 console.log(error);
             });
         }
-        console.log(error);
+        res.status(400).send(error.message);
     }
 }
 
@@ -79,7 +79,7 @@ const changeAdminPassword = async (req, res) => {
         });
         res.redirect('/change-password');
     } catch (error) {
-        console.log(error);
+        res.status(400).send(error.message);
     }
 }
 

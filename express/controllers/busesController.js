@@ -1,5 +1,5 @@
 const { getIdParam } = require('../utils/helperMethods');
-const { Bus, Driver, Destination } = require('../../sequelize/models');
+const { Bus, Driver, Destination, sequelize } = require('../../sequelize/models');
 const fs = require("fs");
 const {Op, Sequelize} = require("sequelize");
 // expand these to services....
@@ -12,8 +12,9 @@ const getAllBuses = async (req, res) => {
                 adminId: req.query.adminId
             }
         });
-        res.send(buses);
+        res.status(200).send(buses);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -26,14 +27,29 @@ const getBusesWithNoSeatsAssigned = async (req, res) => {
                 adminId: req.query.adminId
             }
         });
-        res.send(busWithNoSeatsAssigned);
+        res.status(200).send(busWithNoSeatsAssigned);
     } catch (error) {
+        res.status(500).send(error.message);
+        console.log(error.message);
+    }
+}
+
+const getBusesWithSeatsAssigned = async (req, res) => {
+    try {
+        const busWithSeatsAssigned = await Bus.findAll({
+            where: {
+                assignedSeats: true,
+                adminId: req.query.adminId
+            }
+        });
+        res.status(200).send(busWithSeatsAssigned);
+    } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
 
 const addNewBus = async (req, res) => {
-    console.log(req.body);
     const {busServiceName, busNumber, busStatus, driverId} = req.body;
     const busServiceLogo = req.file.filename;
     const adminId = req.user.id;
@@ -43,13 +59,31 @@ const addNewBus = async (req, res) => {
         if (req.body.id) {
             res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
         } else {
-            const bus = await Bus.create({busServiceName, busNumber, busServiceLogo, busStatus, driverId, adminId});
-            await Driver.update({driverStatus: 'assigned'}, {
-                where: {
-                    id: bus.driverId
+            await sequelize.transaction(async (t) => {
+                const getBus = await Bus.findOne({
+                    where: {
+                        busNumber: busNumber
+                    }
+                });
+                if (getBus) {
+                    res.status(400).send("Bus number should be unique.");
+                } else {
+                    const bus = await Bus.create(
+                        {busServiceName,
+                            busNumber,
+                            busServiceLogo,
+                            busStatus,
+                            driverId,
+                            adminId}, {transaction: t});
+                    await Driver.update({driverStatus: 'assigned'}, {
+                        where: {
+                            id: bus.driverId
+                        },
+                        transaction: t
+                    });
+                    return res.redirect('/create-bus');
                 }
             });
-            res.redirect('/create-bus');
         }
     } catch (error) {
         if (req.file) {
@@ -57,7 +91,7 @@ const addNewBus = async (req, res) => {
                 console.log(error);
             });
         }
-        res.send(error.message);
+        res.status(400).send(error.message);
     }
 }
 
@@ -72,14 +106,14 @@ const busesReadyForRoutes = async (req, res) => {
                 adminId: req.query.adminId
             }
         });
-        res.send(availableBuses);
+        res.status(200).send(availableBuses);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error);
     }
 }
 
 const searchBuses = async (req, res) => {
-    // const { busServiceName, busNumber } = req.query;
     const busServiceName = req.query.busServiceName.toLowerCase();
     const busNumber = req.query.busNumber.toLowerCase();
 
@@ -100,6 +134,7 @@ const searchBuses = async (req, res) => {
         });
         res.json(filteredBuses);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -111,8 +146,9 @@ const busWithDriverAndDestinations = async (req, res) => {
             where: {id: id},
             include: ["destinations", "driverDetails"],
         });
-        res.send(bus);
+        res.status(200).send(bus);
     } catch (error) {
+        res.status(500).send(error.message);
         console.log(error.message);
     }
 }
@@ -130,74 +166,96 @@ const findAllData = async (req, res) => {
         // const buses = await Bus.findAll({include: ['driverDetails']});
         res.status(200).send(buses);
     } catch (error) {
-        res.send(error.message);
+        res.status(500).send(error.message);
     }
 }
 
 const findSingleDataById = async (req, res) => {
-    // Do Stuffs... Refactor as needed.
-    const id = req.params.id;
-    const bus = await Bus.findOne({
-        where: {id: id},
-        // include: ["destinations", "driverDetails"],
-    });
-    res.send(bus);
+    try {
+        const id = req.params.id;
+        const bus = await Bus.findOne({
+            where: {id: id},
+            // include: ["destinations", "driverDetails"],
+        });
+        res.status(200).send(bus);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 }
 
-const updateSingleData = async (req, res) => {
-    const {
-        busServiceName,
-        busNumber,
-        busServiceLogo,
-        busStatus,
-        driverId
-    } = req.body;
+const updateBus = async (req, res) => {
+    const { busServiceName, busNumber, busStatus, driverId } = req.body;
+    const busServiceLogo = req.file.filename;
     const id = req.params.id;
     try {
-        // find bus for previous driver info, and then update, and update new driver to bus if thats the case
-        const updatedBus = await Bus.update({busServiceName, busNumber, busServiceLogo, busStatus, driverId}, {
-            where: {
-                id: id
+        await sequelize.transaction(async (t) => {
+            const getBus = await Bus.findOne({
+                where: {
+                    id: id
+                },
+                transaction: t
+            });
+            if (driverId !== getBus.driverId) {
+                await Driver.update({driverStatus: 'available'}, {
+                    where: {
+                        id: getBus.driverId
+                    },
+                    transaction: t
+                });
             }
+            // find bus for previous driver info, and then update, and update new driver to bus if thats the case
+            await Bus.update({busServiceName, busNumber, busServiceLogo, busStatus, driverId}, {
+                where: {
+                    id: id
+                },
+                transaction: t
+            });
+            await Driver.update({driverStatus: 'assigned'}, {
+                where: {
+                    id: driverId
+                },
+                transaction: t
+            });
+            return res.redirect('/buses/all');
+            // res.send(200).send(updatedBus);
         });
-        res.send(200).send(updatedBus);
     } catch (error) {
-        res.send(error.message);
+        res.status(400).send(error.message);
     }
 }
 
 const deleteSingleData = async (req, res) => {
     const id = req.params.id;
     try {
-        // find by Id
-        const deletedBus = await Bus.findOne({
-            where: {
-                id: id
-            }
+        await sequelize.transaction(async (t) => {
+            const deletedBus = await Bus.findOne({
+                where: {
+                    id: id
+                },
+                transaction: t
+            });
+            await Driver.update({driverStatus: 'available'}, {
+                where: {
+                    id: deletedBus.driverId
+                },
+                transaction: t
+            });
+            await deletedBus.destroy({transaction: t});
+            return res.status(200).json({"message": "Bus Deleted"});
         });
-        await Driver.update({driverStatus: 'available'}, {
-            where: {
-                id: deletedBus.driverId
-            }
-        });
-        if (deletedBus) {
-            await deletedBus.destroy();
-            res.sendStatus(200).json({"message": "Bus Deleted"});
-        } else {
-            res.send("Bus Not Found");
-        }
     } catch (error) {
-        res.send(error.message);
+        res.status(500).send(error.message);
     }
 }
 
 module.exports = {
     findAllData,
     findSingleDataById,
-    updateSingleData,
+    updateBus,
     deleteSingleData,
     getAllBuses,
     getBusesWithNoSeatsAssigned,
+    getBusesWithSeatsAssigned,
     addNewBus,
     busesReadyForRoutes,
     searchBuses,
