@@ -1,0 +1,52 @@
+.bus-map {
+    max-width: 300px;
+    padding: 10px;
+    height: auto;
+    /*background-color: salmon;*/
+    margin: auto;
+}
+
+.passage-gap {
+    margin-right: 55px;
+}
+
+.seat-gap {
+    margin-right: 5px;
+    margin-bottom: 20px;
+}
+
+.bus-seat {
+    width: 50px;
+    height: 50px;
+    outline: 1px solid transparent;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    float: left;
+}
+
+.isSeat {
+    background-color: #333333;
+}
+
+.isBlockedSeat {
+    background-color: #E52528;
+}
+
+.isReservedSeat {
+    background-color: #FF8C00;
+}
+
+.isGeneralSeat {
+    background-color: #717FA4;
+}
+
+.isSociallyDistancedSeat {
+    background-color: #37B880;
+}
+
+.seats-container {
+    width: 100%;
+    height: 50px;
+    padding: 10px;
+    margin-bottom: 5px;
+}
