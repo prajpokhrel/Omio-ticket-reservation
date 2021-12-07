@@ -168,6 +168,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <th>Departure Date/Time</th>
 <!--                                    <th>(estimated) Arrival Date/Time</th>-->
                                     <th>Total Passenger(s)</th>
+                                    <th>Seats</th>
                                     <th>Payment Status</th>
                                     <th>Reservation Status</th>
                                     <th>Actions</th>
@@ -187,6 +188,7 @@ License: You must have a valid license purchased only from themeforest(the above
                                             <td><%= new Date(reservation.destinationDetails.departureDate).toDateString() %>,&nbsp;<%= reservation.destinationDetails.departureTime %></td>
 <!--                                            <td><%= reservation.destinationDetails.arrivalDate %>&nbsp;<%= reservation.destinationDetails.estimatedArrivalTime %></td>-->
                                             <td><%= reservation.totalPassenger %></td>
+                                            <td><%= reservation.seatsNumber %></td>
                                             <td>
                                                 <span class="badge rounded-pill <%= reservation.paymentStatus === 'paid' ? 'badge-light-success' : reservation.paymentStatus === 'refunded' ? 'badge-light-warning' : '' %> me-1">
                                                     <%= reservation.paymentStatus %>

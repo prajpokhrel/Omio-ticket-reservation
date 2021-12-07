@@ -1,6 +1,7 @@
 const { getIdParam } = require('../utils/helperMethods');
 const { User, Reservation, Destination, RouteSpecificSeat, Passenger, Bus, sequelize} = require('../../sequelize/models');
 const {Op, Sequelize} = require("sequelize");
+const sendEmail = require('../services/sendEmailService');
 // expand these to services....
 
 // doing all these in server, not to be tricked by client changing price value :D
@@ -39,6 +40,7 @@ const reserveASeat = async (req, res) => {
     const mainUser = req.body.mainAccount;
     const seatsId = pluck(seats, 'id');
     const passengersCount = passengers.length;
+    const mainPassengerEmail = pluck(passengers, 'email');
 
     try {
         await sequelize.transaction(async (t) => {
@@ -64,7 +66,7 @@ const reserveASeat = async (req, res) => {
             // add reservation form [works fine, update table with decimal in price and then uncomment]
             const reservation = await Reservation.create({
                 seatsNumber: setSelectedSeatNumber,
-                totalTravelAmount: totalRouteFare,
+                totalTravelAmount: totalRouteFare.toFixed(2),
                 totalPassenger: passengersCount,
                 mainAccountId: mainUser.id,
                 forDestination: selectedJourney.id,
@@ -84,6 +86,14 @@ const reserveASeat = async (req, res) => {
                 },
                 transaction: t
             });
+
+            let ticketLink = `http://localhost:3000/booking-invoice/${mainUser.id}/${reservation.id}`;
+
+            await sendEmail(
+                mainPassengerEmail[0],
+                'Your tickets have been booked.',
+                `Please print your tickets or show your booking invoice from your profile during your travel. You can print your tickets from ${ticketLink}`
+            );
 
             return res.status(200).send(addPassengers);
         });
@@ -245,7 +255,10 @@ const findAllData = async (req, res) => {
             where: {
                 adminId: req.query.adminId
             },
-            include: ["mainUserDetails", "destinationDetails"]
+            include: ["mainUserDetails", "destinationDetails"],
+            order: [
+                ["createdAt", "DESC"]
+            ]
         });
         res.status(200).send(reservations);
     } catch (error) {

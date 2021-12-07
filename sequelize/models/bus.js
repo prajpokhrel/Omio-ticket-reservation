@@ -24,10 +24,7 @@ module.exports = (sequelize) => {
         busNumber: {
             type: DataTypes.STRING,
             allowNull: false,
-            unique: true,
-            validate: {
-                isAlphanumeric: true
-            }
+            unique: true
         },
         busServiceLogo: {
             type: DataTypes.STRING,
