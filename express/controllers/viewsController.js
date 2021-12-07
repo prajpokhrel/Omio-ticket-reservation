@@ -196,7 +196,7 @@ const renderAdminProfilePage = async (req, res) => {
 }
 
 const renderChangePasswordPage = async (req, res) => {
-    res.render('users/change-password.ejs', {adminD: req.user});
+    res.render('users/change-password.ejs', {adminD: req.user, error: req.flash('error'), success: req.flash('success')});
 }
 
 const renderSeatsDisplayPage = async (req, res) => {

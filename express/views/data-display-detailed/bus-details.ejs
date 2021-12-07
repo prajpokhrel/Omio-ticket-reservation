@@ -72,16 +72,6 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
                         <h2 class="content-header-title float-start mb-0">Bus Details</h2>
-                        <div class="breadcrumb-wrapper">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index-2.html">Home</a>
-                                </li>
-                                <li class="breadcrumb-item"><a href="#">Card</a>
-                                </li>
-                                <li class="breadcrumb-item active">Basic Card
-                                </li>
-                            </ol>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -115,17 +105,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                         <h6>Bus Number</h6>
                                         <span><%= locals.busDetails.busNumber %></span>
                                         <hr>
-
-                                        <h6>Seat Capacity</h6>
-                                        <span><%= locals.busDetails.seatCapacity %></span>
                                     </div>
                                     <div class="col-sm-6">
-                                        <h6>Assigned Routes Count</h6>
-                                        <span><%= locals.busDetails.assignedRoutesCount %></span>
-                                        <hr>
-
                                         <h6>Bus Image</h6>
                                         <img class="img-fluid" width="100" src="/busImages/<%= locals.busDetails.busServiceLogo %>" alt="bus-logo-img">
+                                        <hr>
                                     </div>
                                 </div>
                             </div>
@@ -170,12 +154,26 @@ License: You must have a valid license purchased only from themeforest(the above
                     <div class="col-md-12 col-xl-12">
                         <div class="card shadow-none bg-transparent border-danger">
                             <div class="card-body">
-                                <h4 class="card-title">Your Routes - within past month</h4>
+                                <h4 class="card-title">Your Routes</h4>
 
                                 <% if (locals.busDetails.destinations.length > 0) { %>
-                                    <% locals.busDetails.destinations.map((destination) => { %>
-                                        <b>From:</b>&nbsp;<%= destination.fromSource %> <b>To:</b>&nbsp;<%= destination.toDestination %>
-                                        <b>Departure Date:</b>&nbsp;<%= destination.departureDate %>&nbsp;<b>Route fare:</b> <%= destination.routeFare %>
+                                    <% locals.busDetails.destinations.map((destination, index) => { %>
+
+                                        <div class="row">
+                                            <h6>Destination <%= index + 1 %></h6>
+                                            <div class="col-sm-6">
+                                                <b>From:&nbsp;</b><%= destination.fromSource %>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <b>To:&nbsp;</b><%= destination.toDestination %>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <b>Departure Date:&nbsp;</b><%= new Date(destination.departureDate).toDateString() %>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <b>Route Fare:&nbsp;</b>US$ <%= destination.routeFare %>
+                                            </div>
+                                        </div>
                                         <hr>
                                     <% }); %>
                                 <% } else { %>

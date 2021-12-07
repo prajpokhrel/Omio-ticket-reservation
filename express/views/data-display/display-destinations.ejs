@@ -77,14 +77,6 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
                         <h2 class="content-header-title float-start mb-0">Destinations</h2>
-                        <div class="breadcrumb-wrapper">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index-2.html">Home</a>
-                                </li>
-                                <li class="breadcrumb-item active">Table Bootstrap
-                                </li>
-                            </ol>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -152,8 +144,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                     <th>Service Tax</th>
                                     <th>Departure Date/Time</th>
                                     <th>(estimated) Arrival Date/Time</th>
-                                    <th>Assigned Bus</th>
-                                    <th>Passengers</th>
                                     <th>Actions</th>
                                 </tr>
                                 </thead>
@@ -168,8 +158,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                             <td><%= destination.serviceTax %></td>
                                             <td><%= new Date(destination.departureDate).toDateString() %>,&nbsp;<%= destination.departureTime %></td>
                                             <td><%= new Date(destination.arrivalDate).toDateString() %>&nbsp;<%= destination.estimatedArrivalTime %></td>
-                                            <td><%= destination.assignedBusId %></td>
-                                            <td>lazy load passengers on modal</td>
                                             <td>
                                                 <div class="dropdown">
                                                     <button type="button" class="btn btn-sm dropdown-toggle hide-arrow py-0" data-bs-toggle="dropdown">
@@ -179,14 +167,6 @@ License: You must have a valid license purchased only from themeforest(the above
                                                         <a id="destinationDetailBtn" class="dropdown-item" href="/destination/details/<%= destination.id %>">
                                                             <i data-feather='file-text' class="me-50"></i>
                                                             <span>Details</span>
-                                                        </a>
-                                                        <a class="dropdown-item" href="/destination/edit/<%= destination.id %>">
-                                                            <i data-feather="edit-2" class="me-50"></i>
-                                                            <span>Edit</span>
-                                                        </a>
-                                                        <a class="dropdown-item destinationDeleteBtn" data-id="<%= destination.id %>">
-                                                            <i data-feather="trash" class="me-50"></i>
-                                                            <span>Delete</span>
                                                         </a>
                                                     </div>
                                                 </div>

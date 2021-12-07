@@ -72,16 +72,6 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
                         <h2 class="content-header-title float-start mb-0">Reservation Details</h2>
-                        <div class="breadcrumb-wrapper">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index-2.html">Home</a>
-                                </li>
-                                <li class="breadcrumb-item"><a href="#">Card</a>
-                                </li>
-                                <li class="breadcrumb-item active">Basic Card
-                                </li>
-                            </ol>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -206,10 +196,24 @@ License: You must have a valid license purchased only from themeforest(the above
                                 <h4 class="card-title">Passengers - traveled to this route on above bus</h4>
 
                                 <% if (locals.reservationDetails.reservation.passengers.length > 0) { %>
-                                    <% locals.reservationDetails.reservation.passengers.map((passenger) => { %>
-                                        <b>Passenger Name:</b>&nbsp;<%= passenger.firstName %>&nbsp;<%= passenger.lastName %>
-                                        <b>E-mail:</b>&nbsp;<%= passenger.email %>&nbsp;<b>Contact:</b> <%= passenger.phoneNumber %>
+                                    <% locals.reservationDetails.reservation.passengers.map((passenger, index) => { %>
+
+                                        <div class="row">
+                                            <h6>Passenger <%= index + 1 %></h6>
+                                            <div class="col-sm-6">
+                                                <b>Full Name:&nbsp;</b><%= passenger.firstName %>&nbsp;<%= passenger.lastName %>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <b>Contact:&nbsp;</b><%= passenger.phoneNumber %>
+                                            </div>
+                                            <% if (passenger.isMainPassenger) { %>
+                                                <div class="col-12">
+                                                    <b>E-Mail:&nbsp;</b><%= passenger.email %>
+                                                </div>
+                                            <% } %>
+                                        </div>
                                         <hr>
+
                                     <% }); %>
                                 <% } else { %>
                                     <b>No passengers found for this route.</b>

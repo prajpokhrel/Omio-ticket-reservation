@@ -81,7 +81,7 @@ const requestAdminPasswordReset = async (req, res) => {
                 email: forgotPasswordEmail
             }
         });
-        if (!user) throw new Error("Email does not exists.");
+        if (!user) res.status(400).send("Email address does not exists.");
         let token = await ResetToken.findOne({
             where: {
                 userId: user.id
@@ -106,7 +106,8 @@ const requestAdminPasswordReset = async (req, res) => {
             "Password Reset Request",
             `Name: ${user.firstName} & Reset Link: ${resetLink}`
         );
-        res.status(200).send("Please check your email for further instructions about your password reset");
+        res.redirect('/confirmation');
+        // res.status(200).send("Please check your email for further instructions about your password reset");
     } catch (error) {
         res.status(400).send(error.message);
     }
@@ -114,23 +115,20 @@ const requestAdminPasswordReset = async (req, res) => {
 
 const resetAdminPassword = async (req, res) => {
     const {userId, token, newPassword} = req.body;
-    // check for different password
-    // handle this nicely, it only throws error, you should end the response if something is wrong
 
     let passwordResetToken = await ResetToken.findOne({
         where: {
-            //         // also check if it is expired or not
             userId: userId
         }
     });
 
     if (!passwordResetToken) {
-        throw new Error("Invalid or expired password reset token");
+        res.status(400).send("Invalid or expired password reset token.");
     }
 
     const isValid = await bcrypt.compare(token, passwordResetToken.token);
     if (!isValid) {
-        throw new Error("Invalid or expired password reset token.");
+        res.status(400).send("Invalid or expired password reset token.")
     }
 
     const hash = await bcrypt.hash(newPassword, 10);

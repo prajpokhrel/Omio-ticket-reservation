@@ -68,7 +68,11 @@ const changeAdminPassword = async (req, res) => {
             }
         });
         const validPassword = await bcrypt.compare(password, currentLoggedAdmin.password);
-        if (!validPassword) return res.status(400).send('Please type your correct previous password.');
+        // if (!validPassword) return res.status(400).send('Please type your correct previous password.');
+        if (!validPassword) {
+            req.flash('error', 'Your previous password do not match.');
+            res.redirect('/change-password');
+        }
 
         const salt = await bcrypt.genSalt(10);
         const updatedPassword = await bcrypt.hash(newPassword, salt);
@@ -77,6 +81,7 @@ const changeAdminPassword = async (req, res) => {
                 id: req.user.id
             }
         });
+        req.flash('success', 'Your password has been changed.')
         res.redirect('/change-password');
     } catch (error) {
         res.status(400).send(error.message);

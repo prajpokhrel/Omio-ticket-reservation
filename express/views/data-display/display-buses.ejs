@@ -77,14 +77,6 @@ License: You must have a valid license purchased only from themeforest(the above
                 <div class="row breadcrumbs-top">
                     <div class="col-12">
                         <h2 class="content-header-title float-start mb-0">Buses</h2>
-                        <div class="breadcrumb-wrapper">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="index-2.html">Home</a>
-                                </li>
-                                <li class="breadcrumb-item active">Table Bootstrap
-                                </li>
-                            </ol>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -133,10 +125,9 @@ License: You must have a valid license purchased only from themeforest(the above
                             <table class="table table-hover">
                                 <thead>
                                 <tr>
+                                    <th>Bus Service Image</th>
                                     <th>Bus Name</th>
                                     <th>Bus Number</th>
-                                    <th>Seat Capacity</th>
-                                    <th>Assigned Routes Count</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -152,11 +143,11 @@ License: You must have a valid license purchased only from themeforest(the above
                                                         width="100"
                                                         alt="bus-service-logo"
                                                 />
+                                            </td>
+                                            <td>
                                                 <span class="fw-bold"><%= bus.busServiceName %></span>
                                             </td>
                                             <td><%= bus.busNumber %></td>
-                                            <td><%= bus.seatCapacity %></td>
-                                            <td><%= bus.assignedRoutesCount %></td>
                                             <td>
                                                 <span class="badge rounded-pill <%= bus.busStatus === 'available' ? 'badge-light-success' : bus.busStatus === 'en route' ? 'badge-light-warning' : bus.busStatus === 'unavailable' ? 'badge-light-danger' : '' %> me-1">
                                                     <%= bus.busStatus %>
