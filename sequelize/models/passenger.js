@@ -53,9 +53,6 @@ module.exports = (sequelize) => {
         idNumber: {
             type: DataTypes.STRING,
             allowNull: false,
-            validate: {
-                isAlphanumeric: true
-            }
         },
         country: {
             type: DataTypes.STRING,

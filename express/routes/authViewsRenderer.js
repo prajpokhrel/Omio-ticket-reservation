@@ -12,7 +12,7 @@ router.get('/register', checkNotAuthenticated, (req, res) => {
 });
 
 router.get('/forgot-password', checkNotAuthenticated, (req, res) => {
-    res.render('auth/forgot-password.ejs');
+    res.render('auth/forgot-password.ejs', {error: req.flash('error')});
 });
 
 router.get('/confirmation', checkNotAuthenticated, (req, res) => {
@@ -31,7 +31,6 @@ router.get('/reset-password/:token/:userId', checkNotAuthenticated,(req, res) =>
     res.render('auth/reset-password.ejs');
 });
 
-// this will be put
 router.post('/reset-password/:token/:userId', checkNotAuthenticated, async (req, res) => {
     const {token, userId} = req.params;
     const { resetPasswordNew } = req.body;
@@ -41,7 +40,10 @@ router.post('/reset-password/:token/:userId', checkNotAuthenticated, async (req,
         newPassword: resetPasswordNew
     }
     try {
-        await axios.post('/auth/resetPassword', formData);
+        const response = await axios.post('/auth/resetPassword', formData);
+        console.log(response.data);
+        req.flash("success", response.data);
+        res.redirect('/auth/login');
     } catch (error) {
         res.status(500).send(error.message);
     }

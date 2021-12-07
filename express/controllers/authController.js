@@ -81,7 +81,11 @@ const requestAdminPasswordReset = async (req, res) => {
                 email: forgotPasswordEmail
             }
         });
-        if (!user) res.status(400).send("Email address does not exists.");
+        // if (!user) res.status(400).send("Email address does not exists.");
+        if (!user) {
+            req.flash('error', 'Email address does not exists.');
+            res.redirect('/auth/forgot-password');
+        }
         let token = await ResetToken.findOne({
             where: {
                 userId: user.id
@@ -92,7 +96,7 @@ const requestAdminPasswordReset = async (req, res) => {
         let resetToken = crypto.randomBytes(32).toString("hex");
         // add 10 to env variable, Number(bcryptSalt)
         const hash = await bcrypt.hash(resetToken, 10);
-        const saveToken = await ResetToken.create({
+        await ResetToken.create({
             userId: user.id,
             token: hash
         });
@@ -106,7 +110,7 @@ const requestAdminPasswordReset = async (req, res) => {
             "Password Reset Request",
             `Name: ${user.firstName} & Reset Link: ${resetLink}`
         );
-        res.redirect('/confirmation');
+        res.redirect('/auth/confirmation');
         // res.status(200).send("Please check your email for further instructions about your password reset");
     } catch (error) {
         res.status(400).send(error.message);
@@ -114,45 +118,50 @@ const requestAdminPasswordReset = async (req, res) => {
 }
 
 const resetAdminPassword = async (req, res) => {
-    const {userId, token, newPassword} = req.body;
+    try {
+        const {userId, token, newPassword} = req.body;
 
-    let passwordResetToken = await ResetToken.findOne({
-        where: {
-            userId: userId
+        let passwordResetToken = await ResetToken.findOne({
+            where: {
+                userId: userId
+            }
+        });
+
+        if (!passwordResetToken) {
+            res.status(400).send("Invalid or expired password reset token.");
         }
-    });
 
-    if (!passwordResetToken) {
-        res.status(400).send("Invalid or expired password reset token.");
+        const isValid = await bcrypt.compare(token, passwordResetToken.token);
+        if (!isValid) {
+            res.status(400).send("Invalid or expired password reset token.")
+        }
+
+        const hash = await bcrypt.hash(newPassword, 10);
+
+        await Admin.update({password: hash}, {
+            where: {
+                id: userId
+            }
+        });
+
+        const user = await Admin.findOne({
+            where: {
+                id: userId
+            }
+        });
+
+        await sendEmail(
+            user.email,
+            "Password Reset Successfully.",
+            "You have reset your password, you can login."
+        );
+
+        await passwordResetToken.destroy();
+
+        res.status(200).send("You have reset your password, you can login.");
+    } catch (error) {
+        res.status(400).send(error.message);
     }
-
-    const isValid = await bcrypt.compare(token, passwordResetToken.token);
-    if (!isValid) {
-        res.status(400).send("Invalid or expired password reset token.")
-    }
-
-    const hash = await bcrypt.hash(newPassword, 10);
-
-    await Admin.update({password: hash}, {
-        where: {
-            id: userId
-        }
-    });
-
-    const user = await Admin.findOne({
-        where: {
-            id: userId
-        }
-    });
-
-    await sendEmail(
-        user.email,
-        "Password Reset Successfully.",
-        "You have reset your password, you can login."
-    );
-
-    await passwordResetToken.destroy();
-    res.redirect('/auth/login');
 }
 
 module.exports = {

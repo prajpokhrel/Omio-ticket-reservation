@@ -6,6 +6,7 @@ const passport = require('passport');
 const crypto = require('crypto');
 const sendEmail = require('../services/sendEmailService');
 const authController = require('../controllers/authController');
+const {validate, adminValidationRules} = require('../middlewares/validator');
 
 router.get('/all/admins', authController.getAllAdmins);
 
@@ -18,7 +19,7 @@ router.post('/login',
         failureFlash: true })
 );
 
-router.post('/register', authController.registerAdmin);
+router.post('/register', adminValidationRules(), validate, authController.registerAdmin);
 
 router.post('/requestResetPassword', authController.requestAdminPasswordReset);
 

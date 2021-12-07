@@ -38,12 +38,18 @@ module.exports = (sequelize) => {
         sociallyDistancedSeatFare: {
             type: DataTypes.DECIMAL,
             allowNull: false,
-            defaultValue: 5
+            defaultValue: 5,
+            validate: {
+                min: 0
+            }
         },
         reservedSeatFare: {
             type: DataTypes.DECIMAL,
             allowNull: false,
-            defaultValue: 2
+            defaultValue: 2,
+            validate: {
+                min: 0
+            }
         },
         isSociallyDistancedSeat: {
             type: DataTypes.BOOLEAN,

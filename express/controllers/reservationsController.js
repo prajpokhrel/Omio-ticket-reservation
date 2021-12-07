@@ -220,6 +220,9 @@ const getBookingInvoice = async (req, res) => {
                 bookingCode: bookingId
             }
         });
+        if (!getUser || !getReservation) {
+            res.status(400).send("Booking code or email is invalid.");
+        }
         res.json({userId: getUser.id, reservationId: getReservation.id});
     } catch (error) {
         res.status(500).send(error);
