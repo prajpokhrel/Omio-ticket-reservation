@@ -63,7 +63,6 @@ const reserveASeat = async (req, res) => {
             const totalRouteFare = calculateTotalRoutePrice(seatSpecificPrice, selectedJourney.routeFare, selectedJourney.serviceTax, passengersCount);
             const setSelectedSeatNumber = setSeatsNumber(selectedSeats);
 
-            // add reservation form [works fine, update table with decimal in price and then uncomment]
             const reservation = await Reservation.create({
                 seatsNumber: setSelectedSeatNumber,
                 totalTravelAmount: totalRouteFare.toFixed(2),
