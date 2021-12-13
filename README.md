@@ -30,4 +30,12 @@ sequelize db:create
 sequelize db:migrate
 ```
 
+## Add places and routes
+
+Call the following API to add places and routes. This has to be done manually.
+
+```
+POST http://127.0.0.1:5000/api/general-routes/places
+```
+
 Finally, start your project using `npm start` from the root directory.
