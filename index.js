@@ -7,11 +7,9 @@ const HOSTNAME = "127.0.0.1";
 async function checkDatabaseConnection() {
     console.log(chalk.cyan("Checking database connection..."));
     try {
-        // Do some stuffs...
         await sequelize.authenticate();
         console.log(chalk.green("Connected to database..!"));
     } catch (error) {
-        // Do other stuffs...
         console.log(chalk.red("Unable to connect to the database."));
         console.log(error.message);
         process.exit(1);

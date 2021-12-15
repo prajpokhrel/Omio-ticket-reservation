@@ -40,7 +40,6 @@ const getNewSeatPlan = (seats, row, col) => {
     const newSeats = seats.slice();
     const node = newSeats[row][col];
 
-    // check frontend code if you need some adjustments
     const newNode = {
         ...initialValues,
         col: col,

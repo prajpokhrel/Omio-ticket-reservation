@@ -2,7 +2,6 @@ const { getIdParam } = require('../utils/helperMethods');
 const { Driver } = require('../../sequelize/models');
 const fs = require("fs");
 const {Op, Sequelize} = require("sequelize");
-// expand these to services....
 
 const createSingleData = async (req, res) => {
     // Do stuffs...
@@ -59,7 +58,6 @@ const addNewDriver = async (req, res) => {
 }
 
 const driversSearch = async (req, res) => {
-    // const { firstName, lastName, email, contactNumber, citizenshipNumber, licenseNumber } = req.query;
     const [firstName, lastName] = req.query.fullName.toLowerCase().split(' ', 2);
     const email = req.query.email.toLowerCase();
     const contactNumber = req.query.contactNumber.toLowerCase();

@@ -22,7 +22,6 @@ const searchDestinations = async (req, res) => {
     const toDestination = req.query.toDestination.toLowerCase();
     const departureDate = new Date(req.query.departureDate);
     const [fromRange, toRange] = req.query.departureDateRange.split('to');
-    // handle this, if no date is passed, it will be undefined
     const fromDateRange = new Date(fromRange.trim());
     const toDateRange = new Date(toRange.trim());
     try {
@@ -72,7 +71,6 @@ const createSingleData = async (req, res) => {
     } = req.body;
     const adminId = req.user.id;
 
-    // this is a transaction
     try {
         await sequelize.transaction(async (t) => {
             const destination = await Destination.create(
@@ -103,7 +101,6 @@ const createSingleData = async (req, res) => {
     }
 }
 
-// users api, required requireAuth validations, client side
 const availableDestinationsForCustomers = async (req, res) => {
     const fromSource = req.params.fromSource.toLowerCase();
     const toDestination = req.params.toDestination.toLowerCase();
@@ -245,7 +242,6 @@ const updateSingleData = async (req, res) => {
 const deleteSingleData = async (req, res) => {
     const id = req.params.id;
     try {
-        // find by Id
         const deletedDestination = await Destination.findOne({
             where: {
                 id: id

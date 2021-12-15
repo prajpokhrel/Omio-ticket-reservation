@@ -26,12 +26,8 @@ const getAdminById = async (req, res) => {
 }
 
 const registerAdmin = async (req, res) => {
-    // validate req.body using joi
-    // handle try catch
     try {
-        // get all the req.body
         const {firstName, lastName, userName, email } = req.body;
-        // check if email and username already exists
         let checkUsername = await Admin.findOne({
             where: {
                 userName: userName
@@ -52,13 +48,9 @@ const registerAdmin = async (req, res) => {
             req.flash('error', 'Email is already registered, please pick a new one or login.');
             res.redirect('/auth/register');
         }
-        // create a new user
-
-        // generate salt using bcrypt and hash password - add to services later on
         const salt = await bcrypt.genSalt(10);
         const password = await bcrypt.hash(req.body.password, salt);
 
-        // save the user
         const admin = await Admin.create({
             firstName, lastName, userName, email, password
         });
@@ -94,17 +86,14 @@ const requestAdminPasswordReset = async (req, res) => {
         if (token) await token.destroy();
 
         let resetToken = crypto.randomBytes(32).toString("hex");
-        // add 10 to env variable, Number(bcryptSalt)
         const hash = await bcrypt.hash(resetToken, 10);
         await ResetToken.create({
             userId: user.id,
             token: hash
         });
 
-        // create another function to create a link
         let resetLink = `http://127.0.0.1:5000/auth/reset-password/${resetToken}/${user.id}`;
 
-        // send email
         await sendEmail(
             user.email,
             "Password Reset Request",

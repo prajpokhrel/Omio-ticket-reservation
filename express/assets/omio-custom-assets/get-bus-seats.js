@@ -29,66 +29,12 @@ deleteSeatsBtn.onclick = (event) => {
         console.log(error);
     });
 }
-//
-// const getInitialSeatPlan = (seats) => {
-//     for (let row = 0; row < 10; row++) {
-//         const currentRow = [];
-//         for (let col = 0; col < 5; col++) {
-//             currentRow.push(createSeat(col, row));
-//         }
-//         seats.push(currentRow);
-//     }
-// }
 
 // isBlockedSeat
 // isGeneralSeat
 // isSociallyDistancedSeat
 // isSeat
 // isReservedSeat
-
-// const initialValues = {
-//     isSeat: false,
-//     isSociallyDistancedSeat: false,
-//     isReservedSeat: false,
-//     isGeneralSeat: false,
-//     isBlockedSeat: false
-// }
-
-// const getNewSeatPlan = (seats, row, col) => {
-//     const newSeats = seats.slice();
-//     const node = newSeats[row][col];
-//
-//     // check frontend code if you need some adjustments
-//     const newNode = {
-//         ...initialValues,
-//         col: col,
-//         row: row,
-//         [seatTypeValue]: !node[seatTypeValue],
-//         isSeat: !node.isSeat
-//     };
-//
-//     newSeats[row][col] = newNode;
-//     return newSeats;
-// }
-
-// const createSeat = (col, row) => {
-//     return {
-//         col,
-//         row,
-//         isSeat: false,
-//         isSociallyDistancedSeat: false,
-//         isReservedSeat: false,
-//         isGeneralSeat: false,
-//         isBlockedSeat: false
-//     }
-// }
-
-// const handleSeatsClick = (row, col) => {
-//     const newSeatPlan = getNewSeatPlan(seats, row, col);
-//     seats = newSeatPlan;
-//     generateSeatMap(seats);
-//     console.log(seats);
-// };
 
 const buildSeatMap = (seats) => {
     while (busMap.firstChild) {

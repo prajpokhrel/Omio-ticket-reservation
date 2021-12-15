@@ -218,8 +218,6 @@ const renderUpdateBusPage = async (req, res) => {
     };
     try {
         const bus = await axios.get(`/general-routes/buses/${busId}`);
-        // find all the available drivers as well as the driver from bus data,
-        // driver assigned to that bus - done
         const drivers = await axios.get(`/drivers/${bus.data.driverId}`, {params});
         res.render('data-update/update-bus.ejs', {drivers: drivers.data, bus: bus.data, adminD: req.user});
     } catch (error) {

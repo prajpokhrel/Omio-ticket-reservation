@@ -1,6 +1,5 @@
 const { Passenger } = require('../../sequelize/models');
 const {Op, Sequelize} = require("sequelize");
-// expand these to services....
 
 const createSingleData = async (req, res) => {
     // Do Stuffs...

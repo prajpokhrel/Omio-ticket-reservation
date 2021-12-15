@@ -2,9 +2,7 @@ const { getIdParam } = require('../utils/helperMethods');
 const { User, Reservation, Destination, RouteSpecificSeat, Passenger, Bus, sequelize} = require('../../sequelize/models');
 const {Op, Sequelize} = require("sequelize");
 const sendEmail = require('../services/sendEmailService');
-// expand these to services....
 
-// doing all these in server, not to be tricked by client changing price value :D
 const calculateSeatSpecificPrice = (seats) => {
     return seats.reduce((previousValue, currentValue) => {
         return parseFloat(previousValue) + parseFloat(currentValue.seatSpecificPrice);
@@ -72,11 +70,9 @@ const reserveASeat = async (req, res) => {
                 adminId: selectedJourney.adminId
             }, {transaction: t});
 
-            // add passenger form
             const arrangedPassengers = arrangePassengers(passengers, selectedJourney.id, mainUser.id, reservation.id, selectedJourney.adminId);
             const addPassengers = await Passenger.bulkCreate(arrangedPassengers, {transaction: t});
 
-            // update seats as booked
             await RouteSpecificSeat.update({isBookedSeat: true}, {
                 where: {
                     id: {
@@ -107,7 +103,6 @@ const searchReservations = async (req, res) => {
     const toDestination = req.query.toDestination.toLowerCase();
     const departureDate = new Date(req.query.departureDate);
     const [fromRange, toRange] = req.query.departureDateRange.split('to');
-    //handle this if no dates passed
     const fromDateRange = new Date(fromRange.trim());
     const toDateRange = new Date(toRange.trim());
     const [firstName, lastName] = req.query.fullName.toLowerCase().split(' ', 2);
@@ -179,7 +174,6 @@ const detailedReservationDetails = async (req, res) => {
     }
 }
 
-// users apis, need requireAuth middleware
 const getCustomerSpecificReservationDetails = async (req, res) => {
     const {customerId, reservationId} = req.params;
     try {

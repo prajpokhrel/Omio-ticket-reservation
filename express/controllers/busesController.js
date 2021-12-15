@@ -2,8 +2,6 @@ const { getIdParam } = require('../utils/helperMethods');
 const { Bus, Driver, Destination, sequelize } = require('../../sequelize/models');
 const fs = require("fs");
 const {Op, Sequelize} = require("sequelize");
-// expand these to services....
-// asyncErrors middleware to reduce try catch will be implemented later on
 
 const getAllBuses = async (req, res) => {
     try {
@@ -53,8 +51,6 @@ const addNewBus = async (req, res) => {
     const {busServiceName, busNumber, busStatus, driverId} = req.body;
     const busServiceLogo = req.file.filename;
     const adminId = req.user.id;
-    // multer will handle form image this
-    // this is a transaction, handle wisely, works for now
     try {
         if (req.body.id) {
             res.status(400).send("Bad request: ID should not be provided, since it is determined automatically by the database.");
@@ -203,7 +199,6 @@ const updateBus = async (req, res) => {
                     transaction: t
                 });
             }
-            // find bus for previous driver info, and then update, and update new driver to bus if thats the case
             await Bus.update({busServiceName, busNumber, busServiceLogo, busStatus, driverId}, {
                 where: {
                     id: id
